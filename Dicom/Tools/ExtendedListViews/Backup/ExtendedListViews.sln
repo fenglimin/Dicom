@@ -1,0 +1,27 @@
+Microsoft Visual Studio Solution File, Format Version 7.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExtendedListViews", "ExtendedListViews.csproj", "{36202DE0-590A-43D4-A99D-55412CAD71C8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExtendedListTest", "..\ExtendedListTest\ExtendedListTest.csproj", "{F4711416-DE3E-4D0F-8B1C-15A5F9CB98D3}"
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		ConfigName.0 = Debug
+		ConfigName.1 = Release
+	EndGlobalSection
+	GlobalSection(ProjectDependencies) = postSolution
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{36202DE0-590A-43D4-A99D-55412CAD71C8}.Debug.ActiveCfg = Debug|.NET
+		{36202DE0-590A-43D4-A99D-55412CAD71C8}.Debug.Build.0 = Debug|.NET
+		{36202DE0-590A-43D4-A99D-55412CAD71C8}.Release.ActiveCfg = Release|.NET
+		{36202DE0-590A-43D4-A99D-55412CAD71C8}.Release.Build.0 = Release|.NET
+		{F4711416-DE3E-4D0F-8B1C-15A5F9CB98D3}.Debug.ActiveCfg = Debug|.NET
+		{F4711416-DE3E-4D0F-8B1C-15A5F9CB98D3}.Debug.Build.0 = Debug|.NET
+		{F4711416-DE3E-4D0F-8B1C-15A5F9CB98D3}.Release.ActiveCfg = Release|.NET
+		{F4711416-DE3E-4D0F-8B1C-15A5F9CB98D3}.Release.Build.0 = Release|.NET
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

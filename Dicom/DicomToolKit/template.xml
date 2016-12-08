@@ -1,0 +1,173 @@
+<template>
+  <dcid id='270' name='Observer Type' extensible='false' version='20040920'>
+      <value>(DCM,121006,Person)</value>
+      <value>(DCM,121006,Device)</value>
+  </dcid>
+  <dcid id='3629' name='Procedure Intent' extensible='true' version='20030327'>
+    <value>(SRT,R-408C3,Diagnostic Intent)</value>
+    <value>(SRT,R-41531,Therapeutic Intent)</value>
+    <value>(SRT,R-002E9,Combined Diagnostic and Therapeutic Procedure)</value>
+  </dcid>
+  <dcid id='7452' name='Organizational Roles' extensible='true' version='20020904'>
+    <value>(DCM,121081,Physician)</value>
+    <value>(DCM,121082,Nurse)</value>
+    <value>(DCM,121083,Technologist)</value>
+    <value>(DCM,121084,Radiographer)</value>
+    <value>(DCM,121085,Intern)</value>
+    <value>(DCM,121086,Resident)</value>
+    <value>(DCM,121087,Registrar)</value>
+    <value>(DCM,121088,Fellow)</value>
+    <value>(DCM,121089,Attending,[Consultant])</value>
+    <value>(DCM,121090,Scrub,nurse)</value>
+    <value>(DCM,121091,Surgeon)</value>
+    <value>(DCM,121092,Sonologist)</value>
+    <value>(DCM,121093,Sonographer)</value>
+    <value>(DCM,121105,Radiation,Physicist)</value>
+  </dcid>
+  <dcid id='7453' name='Performing Roles' extensible='true' version='20081028'>
+    <value>(DCM,121094,Performing)</value>
+    <value>(DCM,121095,Referring)</value>
+    <value>(DCM,121096,Requesting)</value>
+    <value>(DCM,121097,Recording)</value>
+    <value>(DCM,121098,Verifying)</value>
+    <value>(DCM,121099,Assisting)</value>
+    <value>(DCM,121100,Circulating)</value>
+    <value>(DCM,121101,Standby)</value>
+    <value>(DCM,113850,Irradiation Authorizing)</value>
+    <value>(DCM,113851,Irradiation Administering)</value>
+  </dcid>
+  <dcid id='7445' name='Device Participating Roles' extensible='true' version='20110110'>
+    <value>(DCM,113859,Irradiating Device)</value>
+    <value>(DCM,121097,Recording)</value>
+  </dcid>
+  <dcid id='10000' name='Scope of Accumulation' extensible='true' version='20081028'>
+      <value>(DCM,113014,Study)</value>
+      <value>(DCM,113015,Series)</value>
+      <value>(DCM,113016,Performed Procedure Step)</value>
+      <value>(DCM,113852,Irradiation Event)</value>
+  </dcid>
+  <dcid id='10001' name='UID Types' extensible='true' version='20081028'>
+      <value>(DCM,110180,Study Instance UID)</value>
+      <value>(DCM,112002,Series Instance UID)</value>
+      <value>(DCM,121126,Performed Procedure Step SOP Instance UID)</value>
+      <value>(DCM,113853,Irradiation Event UID)</value>
+  </dcid>
+
+  <dcid id='' name='' extensible='' version=''>
+    <value></value>
+  </dcid>
+  <dcid id='' name='' extensible='' version=''>
+    <value></value>
+  </dcid>
+
+  <tid id='' title='' extensible='false' ordered='true'>
+  </tid>
+  <tid id='' title='' extensible='false' ordered='true'>
+  </tid>
+
+  <tid id='1002' title='Observer Context' extensible='false' ordered='true'>
+    <code relation='HAS OBS CONTEXT' vm='1' reqtype='MC' depends='IF Observer type is (DCM,121007,Device)' default='(DCM,121006,Person)'>
+      <name>(DCM,121005,Observer Type)</name>
+      <dcid id='3629'/>
+    </code>
+    <include DTID='1003' vm='1' reqtype='MC' depends='IFF Row 1 value = (DCM,121006,Person) or Row 1 is absent'/>
+    <include DTID='1004' vm='1' reqtype='MC' depends='IFF Row 1 value = (DCM,121007,Device)'/>
+  </tid>
+  <tid id='1003' title='Person Observer Identifying Attributes' extensible='true' ordered='true'>
+    <pname vm='1' reqtype='M'>
+      <name>(DCM,121008,Person Observer Name)</name>
+    </pname>
+    <text vm='1' reqtype='U' default='(0008,0080)'>
+      <name>(DCM,121009,Person Observer’s Organization Name)</name>
+    </text>
+    <code vm='1' reqtype='U'>
+      <name>(DCM,121010,Person Observer’s Role in the Organization)</name>
+      <dcid id='7452'/>
+    </code>
+    <code vm='1' reqtype='U'>
+      <name>(DCM,121011,Person Observer’s Role in this Procedure)</name>
+      <dcid id='7453'/>
+    </code>
+  </tid>
+  <tid id='1004' title='Device Observer Identifying Attributes' extensible='true' ordered='true'>
+    <uidref vm='1' reqtype='M'>
+      <name>(DCM,121012,Device Observer UID)</name>
+    </uidref>
+    <text vm='1' reqtype='U' default='(0008,1010)'>
+      <name>(DCM,121013,Device Observer Name)</name>
+    </text>
+    <text vm='1' reqtype='U' default='(0008,0070)'>
+      <name>(DCM,121014,Device Observer Manufacturer</name>
+    </text>
+    <text vm='1' reqtype='U' default='(0008,1090)'>
+      <name>(DCM,121015,Device Observer Model Name)</name>
+    </text>
+    <text vm='1' reqtype='U' default='(0018,1000)'>
+      <name>(121016,DCM,Device Observer Serial Number)</name>
+    </text>
+    <text vm='1' reqtype='U'>
+      <name>(DCM,121017,Device Observer Physical Location during observation)</name>
+    </text>
+    <code vm='1-n' reqtype='U'>
+      <name>(DCM,113876,Device Role in Procedure)</name>
+    </code>
+  </tid>
+  <tid id='10002' title='Accumulated X-Ray Dose' extensible='true' ordered='true'>
+    <container vm='1' reqtype='M'>
+      <name>(DCM,113702,Accumulated XRay Dose Data)</name>
+      <code relation='HAS CONCEPT MOD' vm='1' reqtype='M' name='$Plane'>
+        <name>(DCM,113764,Acquisition Plane)</name>
+        <value>(DCM,113620,Plane A)</value>
+        <value>(DCM,113621,Plane B)</value>
+        <value>(DCM,113622,Single Plane)</value>
+      </code>
+      <container relation='CONTAINS' vm='1-n' reqtype='MC' depends='IFF Calibration Data is available' >
+        <code relation='CONTAINS' vm='1' reqtype='M'>
+          <name>(DCM,113794,Dose Measurement Device)</name>
+          <dcid id='10010'/>
+        </code>
+        <datetime relation='CONTAINS' vm='1' reqtype='M'>
+          <name>(DCM,113723,Calibration Date)</name>
+        </datetime>
+        <numeric relation='CONTAINS' vm='1' reqtype='M'>
+          <name>(DCM,122322,Calibration Factor)</name>
+        </numeric>
+        <numeric relation='CONTAINS' vm='1' reqtype='M'>
+          <name>(DCM,113763,Calibration Uncertainty)</name>
+        </numeric>
+        <text relation='CONTAINS' vm='1' reqtype='M'>
+          <name>(DCM,113724,Calibration Responsible Party)</name>
+        </text>
+      </container>
+    </container>
+  </tid>
+
+  <tid id='10001' title='Projection X-Ray Radiation Dose' extensible='true' ordered='true'>
+    <container vm='1' reqtype='M'>
+      <name>(DCM,113701,X-Ray Radiation Dose Report)</name>
+      <code relation='HAS CONCEPT MOD' vm='1' reqtype='M'>
+          <name>(DCM,121058,Procedure reported)</name>
+          <value>(DCM,113704,Projection X-Ray)</value>
+          <value>(SRT,P5-40010,Mammography)</value>
+          <code relation='HAS CONCEPT MOD' vm='1' reqtype='M'>
+              <name>(SRT,G-C0E8,Has Intent)</name>
+              <dcid id='3629'/>
+          </code>
+      </code>
+      <include DTID='1002' vm='1-n' reqtype='M'>
+      <code relation='HAS OBS CONTEXT' vm='1' reqtype='M'>
+          <name>(DCM,113705,Scope of Accumulation)</name>
+          <dcid id='10000'/>
+          <uidref relation='HAS PROPERTIES' vm='1' reqtype='M'>
+              <name>
+                  <dcid id='10001'/>
+              </name>
+          </uidref>
+      </code>
+      </include>
+      <include DTID='10002' vm='1' reqtype='MC' depends='IFF Single Plane system' constraint='$Plane=(DCM,113622,Single Plane)'/>
+      <include DTID='10002' vm='1' reqtype='MC' depends='IFF Biplane system' constraint='$Plane=(DCM,113620,Plane A)'/>
+      <include DTID='10002' vm='1' reqtype='MC' depends='IFF Biplane system' constraint='$Plane=(DCM,113621,Plane B)'/>
+    </container>
+  </tid>
+</template>

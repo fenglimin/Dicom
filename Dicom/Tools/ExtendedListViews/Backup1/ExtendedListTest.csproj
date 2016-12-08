@@ -1,0 +1,128 @@
+<VisualStudioProject>
+    <CSHARP
+        ProjectType = "Local"
+        ProductVersion = "7.0.9466"
+        SchemaVersion = "1.0"
+        ProjectGuid = "{F4711416-DE3E-4D0F-8B1C-15A5F9CB98D3}"
+    >
+        <Build>
+            <Settings
+                ApplicationIcon = "App.ico"
+                AssemblyKeyContainerName = ""
+                AssemblyName = "ExtendedListTest"
+                AssemblyOriginatorKeyFile = ""
+                DefaultClientScript = "JScript"
+                DefaultHTMLPageLayout = "Grid"
+                DefaultTargetSchema = "IE50"
+                DelaySign = "false"
+                OutputType = "WinExe"
+                RootNamespace = "ExtendedListTest"
+                StartupObject = ""
+            >
+                <Config
+                    Name = "Debug"
+                    AllowUnsafeBlocks = "false"
+                    BaseAddress = "285212672"
+                    CheckForOverflowUnderflow = "false"
+                    ConfigurationOverrideFile = ""
+                    DefineConstants = "DEBUG;TRACE"
+                    DocumentationFile = ""
+                    DebugSymbols = "true"
+                    FileAlignment = "4096"
+                    IncrementalBuild = "true"
+                    Optimize = "false"
+                    OutputPath = "bin\Debug\"
+                    RegisterForComInterop = "false"
+                    RemoveIntegerChecks = "false"
+                    TreatWarningsAsErrors = "false"
+                    WarningLevel = "4"
+                />
+                <Config
+                    Name = "Release"
+                    AllowUnsafeBlocks = "false"
+                    BaseAddress = "285212672"
+                    CheckForOverflowUnderflow = "false"
+                    ConfigurationOverrideFile = ""
+                    DefineConstants = "TRACE"
+                    DocumentationFile = ""
+                    DebugSymbols = "false"
+                    FileAlignment = "4096"
+                    IncrementalBuild = "false"
+                    Optimize = "true"
+                    OutputPath = "bin\Release\"
+                    RegisterForComInterop = "false"
+                    RemoveIntegerChecks = "false"
+                    TreatWarningsAsErrors = "false"
+                    WarningLevel = "4"
+                />
+            </Settings>
+            <References>
+                <Reference
+                    Name = "System"
+                    AssemblyName = "System"
+                    HintPath = "I:\WINXP\Microsoft.NET\Framework\v1.0.3705\System.dll"
+                />
+                <Reference
+                    Name = "System.Data"
+                    AssemblyName = "System.Data"
+                    HintPath = "I:\WINXP\Microsoft.NET\Framework\v1.0.3705\System.Data.dll"
+                />
+                <Reference
+                    Name = "System.Drawing"
+                    AssemblyName = "System.Drawing"
+                    HintPath = "I:\WINXP\Microsoft.NET\Framework\v1.0.3705\System.Drawing.dll"
+                />
+                <Reference
+                    Name = "System.Windows.Forms"
+                    AssemblyName = "System.Windows.Forms"
+                    HintPath = "I:\WINXP\Microsoft.NET\Framework\v1.0.3705\System.Windows.Forms.dll"
+                />
+                <Reference
+                    Name = "System.XML"
+                    AssemblyName = "System.Xml"
+                    HintPath = "I:\WINXP\Microsoft.NET\Framework\v1.0.3705\System.XML.dll"
+                />
+                <Reference
+                    Name = "Interop.Shell32"
+                    AssemblyName = "Interop.Shell32"
+                    HintPath = "..\nerve.net\synapticeffect.forums\bin\debug\Interop.Shell32.dll"
+                />
+                <Reference
+                    Name = "OPaC.uxTheme"
+                    AssemblyName = "OPaC.uxTheme"
+                    HintPath = "..\nerve.net\synapticeffect.forums\bin\debug\OPaC.uxTheme.dll"
+                />
+                <Reference
+                    Name = "ExtendedListViews"
+                    Project = "{36202DE0-590A-43D4-A99D-55412CAD71C8}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
+            </References>
+        </Build>
+        <Files>
+            <Include>
+                <File
+                    RelPath = "App.ico"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "AssemblyInfo.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "ExtendedListTest.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "ExtendedListTest.resx"
+                    DependentUpon = "ExtendedListTest.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <Folder RelPath = "images\" />
+            </Include>
+        </Files>
+    </CSHARP>
+</VisualStudioProject>
+

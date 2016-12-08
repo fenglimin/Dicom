@@ -1,0 +1,1 @@
+bin\Debug\DicomQuery WORKLIST 127.0.0.1 2056 SMIT CR

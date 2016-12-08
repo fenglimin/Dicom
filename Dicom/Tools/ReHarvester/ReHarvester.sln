@@ -1,0 +1,42 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReHarvester", "ReHarvester.csproj", "{7C4D1513-761E-43DE-B27F-9BD6F8DB8D3F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A63467BB-E824-46AE-BE6E-98840716E16C} = {A63467BB-E824-46AE-BE6E-98840716E16C}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EK.Capture.Dicom.DicomToolKit", "..\..\DicomToolKit\EK.Capture.Dicom.DicomToolKit.csproj", "{A63467BB-E824-46AE-BE6E-98840716E16C}"
+EndProject
+Global
+	GlobalSection(SourceCodeControl) = preSolution
+		SccNumberOfProjects = 2
+		SccProjectUniqueName0 = ReHarvester.csproj
+		SccProjectName0 = SAK
+		SccLocalPath0 = .
+		SccProvider0 = MSSCCI:ClearCase
+		CanCheckoutShared = true
+		SccProjectUniqueName1 = ..\\..\\DicomToolKit\\EK.Capture.Dicom.DicomToolKit.csproj
+		SccProjectName1 = SAK
+		SccLocalPath1 = ..\\..\\DicomToolKit
+		SccProvider1 = MSSCCI:ClearCase
+		CanCheckoutShared = true
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7C4D1513-761E-43DE-B27F-9BD6F8DB8D3F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C4D1513-761E-43DE-B27F-9BD6F8DB8D3F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C4D1513-761E-43DE-B27F-9BD6F8DB8D3F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C4D1513-761E-43DE-B27F-9BD6F8DB8D3F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A63467BB-E824-46AE-BE6E-98840716E16C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A63467BB-E824-46AE-BE6E-98840716E16C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A63467BB-E824-46AE-BE6E-98840716E16C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A63467BB-E824-46AE-BE6E-98840716E16C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -1,43 +1,64 @@
-# Windows image file caches
+# Ignore Windows Thumbnails
 Thumbs.db
-ehthumbs.db
 
-# Folder config file
-Desktop.ini
+# Ignore Built Visual Studio Files
+*.suo
+*.ilk
+*.ipch
+*.opensdf
+*.obj
+*.pdb
+*.user
+*.aps
+*.dbmdl
+*.pch
+*.vspscc
+*.vssscc
+*_i.c
+*_p.c
+*_i.h
+*.ncb
+*.suo
+*.tlb
+*.tlh
+*.bak
+*.cache
+*.ilk
+*.log
+*.tlog
+[Bb]in/*
+[Dd]eploy
+[Tt]est[Ii]mages
+[Dd]ebug*/*
+*.lib
+*.sbr
+obj/
+[Rr]elease*/*
+*.sdf
+/src/.vs/**
 
-# Recycle Bin used on file shares
-$RECYCLE.BIN/
+# Ignore Local ReSharper Files
+_ReSharper*/
+[Tt]est[Rr]esult*
+[Ll]ogs
+COPYERRORS.*
+InstallUtil.InstallLog
+*.ccexclude
 
-# Windows Installer files
-*.cab
-*.msi
-*.msm
-*.msp
+# Ignore KDiff Original Files - Created on merges
+*.orig
 
-# =========================
-# Operating System Files
-# =========================
+# Ignore NuGet Packages
+#src/packages/*/*
+src/prototypes/*/packages/*/
 
-# OSX
-# =========================
+# Ignore Debug/Release
+*/[Dd]ebug*/*
+*/*/[Dd]ebug*/*
+*/[Rr]elease*/*
+*/*/[Rr]elease*/*
 
-.DS_Store
-.AppleDouble
-.LSOverride
+MultiExplorer.v12.suo
+RunCmd.exe
 
-# Icon must end with two \r
-Icon
 
-# Thumbnails
-._*
-
-# Files that might appear on external disk
-.Spotlight-V100
-.Trashes
-
-# Directories potentially created on remote AFP share
-.AppleDB
-.AppleDesktop
-Network Trash Folder
-Temporary Items
-.apdisk

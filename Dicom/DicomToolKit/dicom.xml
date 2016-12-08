@@ -1,0 +1,1240 @@
+<dicom>
+    <macro name="CodeSequenceMacro">
+        <element tag="(0008,0100)" vt="1C"></element>
+        <element tag="(0008,0102)" vt="1C"></element>
+        <element tag="(0008,0103)" vt="1C"></element>
+        <element tag="(0008,0104)" vt="1C"></element>
+        <element tag="(0008,010F)" vt="3"></element>
+        <element tag="(0008,0105)" vt="3"></element>
+        <element tag="(0008,0106)" vt="3"></element>
+        <element tag="(0008,010B)" vt="3"></element>
+        <element tag="(0008,0107)" vt="3"></element>
+        <element tag="(0008,010D)" vt="3"></element>
+    </macro>
+    <macro name="PersonIdentificationMacro">
+        <sequence tag="(0040,1101)" vt="1">
+            <include name="CodeSequenceMacro"></include>
+        </sequence>
+        <element tag="(0040,1102)" vt="3"></element>
+        <element tag="(0040,1103)" vt="3"></element>
+        <element tag="(0008,0080)" vt="3"></element>
+        <element tag="(0008,0081)" vt="3"></element>
+        <sequence tag="(0008,0082)" vt="3">
+            <include name="CodeSequenceMacro"></include>
+        </sequence>
+    </macro>
+    <macro name="ContentItemMacro">
+        <element tag="(0040,A040)" vt="1C"></element>
+        <sequence tag="(0040,A043)" vt="1C">
+            <include name="CodeSequenceMacro"></include>
+        </sequence>
+        <element tag="(0040,A120)" vt="1C" dependency="(0040,A040)=DATETIME"></element>
+        <element tag="(0040,A121)" vt="1C" dependency="(0040,A040)=DATE"></element>
+        <element tag="(0040,A122)" vt="3" dependency="(0040,A040)=TIME"></element>
+        <element tag="(0040,A123)" vt="1C" dependency="(0040,A040)=PNAME"></element>
+        <element tag="(0040,A124)" vt="1C" dependency="(0040,A040)=PNAME"></element>
+        <element tag="(0040,A160)" vt="1C" dependency="(0040,A040)=TEXT"></element>
+        <sequence tag="(0040,A168)" vt="1C">
+            <include name="CodeSequenceMacro"></include>
+        </sequence>
+        <element tag="(0040,A30A)" vt="1C" dependency="(0040,A040)=NUMERIC"></element>
+        <sequence tag="(0040,08EA)" vt="1C">
+            <include name="CodeSequenceMacro"></include>
+        </sequence>
+    </macro>
+    <macro name="ImagePixelMacro">
+        <element tag="(0028,0002)" vt="1"></element>
+        <element tag="(0028,0004)" vt="1"></element>
+        <element tag="(0028,0010)" vt="1"></element>
+        <element tag="(0028,0011)" vt="1"></element>
+        <element tag="(0028,0100)" vt="1" dependency="(0028,0101)=6:16"></element>
+        <element tag="(0028,0101)" vt="1"></element>
+        <element tag="(0028,0102)" vt="1"></element>
+        <element tag="(0028,0103)" vt="1"></element>
+        <element tag="(7FE0,0010)" vt="1"></element>
+        <element tag="(0028,0006)" vt="1C" dependency="(0028,0002)=3"></element>
+        <element tag="(0028,0034)" vt="1C"></element>
+        <element tag="(0028,0106)" vt="3"></element>
+        <element tag="(0028,0107)" vt="3"></element>
+        <element tag="(0028,1101)" vt="1C" dependency="(0028,0004)=RGB"></element>
+        <element tag="(0028,1102)" vt="1C" dependency="(0028,0004)=RGB"></element>
+        <element tag="(0028,1103)" vt="1C" dependency="(0028,0004)=RGB"></element>
+        <element tag="(0028,1201)" vt="1C" dependency="(0028,0004)=RGB"></element>
+        <element tag="(0028,1202)" vt="1C" dependency="(0028,0004)=RGB"></element>
+        <element tag="(0028,1203)" vt="1C" dependency="(0028,0004)=RGB"></element>
+    </macro>
+    <macro name="ReferencedInstanceUID">
+        <element tag="(0008,1150)" vt="1C"></element>
+        <element tag="(0008,1155)" vt="1C"></element>
+    </macro>
+    <macro name="GeneralAnatomyMandatoryMacro">
+        <sequence tag="(0008,2218)" vt="1">
+            <include name="CodeSequenceMacro"></include>
+            <sequence tag="(0008,2220)" vt="3">
+                <include name="CodeSequenceMacro"></include>
+            </sequence>
+        </sequence>
+        <sequence tag="(0008,2228)" vt="3">
+            <include name="CodeSequenceMacro"></include>
+            <sequence tag="(0008,2230)" vt="3">
+                <include name="CodeSequenceMacro"></include>
+            </sequence>
+        </sequence>
+    </macro>
+    <macro name="GeneralAnatomyOptionalMacro">
+        <sequence tag="(0008,2218)" vt="3">
+            <include name="CodeSequenceMacro"></include>
+            <sequence tag="(0008,2220)" vt="3">
+                <include name="CodeSequenceMacro"></include>
+            </sequence>
+            <include name="PrimaryAnatomicStructureMacro"></include>
+        </sequence>
+    </macro>
+    <macro name="PrimaryAnatomicStructureMacro">
+        <sequence tag="(0008,2228)" vt="3">
+            <include name="CodeSequenceMacro"></include>
+            <sequence tag="(0008,2230)" vt="3">
+                <include name="CodeSequenceMacro"></include>
+            </sequence>
+        </sequence>
+    </macro>
+    <macro name="ExposureIndexMacro">
+        <element tag="(0018,1411)" vt="3"></element>
+        <element tag="(0018,1412)" vt="3"></element>
+        <element tag="(0018,1413)" vt="3"></element>
+    </macro>
+    <macro name="SpecimenMacro">
+    </macro>
+    <macro name="NumericMeasurementMacro">
+        <sequence tag="(0040,A300)" vt="2">
+            <element tag="(0040,A300)" vt="1"></element>
+            <element tag="(0040,A30A)" vt="1"></element>
+            <sequence tag="(0040,08EA)" vt="1">
+                <include name="CodeSequenceMacro"></include>
+            </sequence>
+        </sequence>
+        <sequence tag="(0040,A301)" vt="3">
+            <include name="CodeSequenceMacro"></include>
+        </sequence>
+    </macro>
+    <macro name="CodeMacro">
+        <sequence tag="(0040,A168)" vt="1">
+            <include name="CodeSequenceMacro"></include>
+        </sequence>
+    </macro>
+    <macro name="CompositeObjectReferenceMacro">
+        <sequence tag="(0008,1199)" vt="1">
+            <include name="SOPInstanceReferenceMacro"></include>    
+        </sequence>
+    </macro>
+    <macro name="ImageReferenceMacro">
+        <sequence tag="(0008,1199)" vt="1">
+            <include name="SOPInstanceReferenceMacro"></include>
+            <element tag="(0008,1160)" vt="1C" dependency="(0062,000B)=!"></element>
+            <element tag="(0062,000B)" vt="1C" dependency="(0008,1160)=!"></element>
+            <sequence tag="(0008,1199)" vt="3">
+                <include name="SOPInstanceReferenceMacro"></include>    
+            </sequence>
+        </sequence>
+    </macro>
+    <macro name="WaveformReferenceMacro">
+        <sequence tag="(0008,1199)" vt="1">
+            <include name="SOPInstanceReferenceMacro"></include>
+            <element tag="(0040,A0B0)" vt="1C"></element>
+        </sequence>
+    </macro>
+    <macro name="SpatialCoordinatesMacro">
+        <element tag="(0070,0022)" vt="1"></element>
+        <element tag="(0070,0023)" vt="1"></element>
+        <element tag="(0070,031A)" vt="3"></element>
+    </macro>
+    <macro name="3DSpatialCoordinatesMacro">
+    </macro>
+    <macro name="TemporalCoordinatesMacro">
+        <element tag="(0040,A130)" vt="1"></element>
+        <element tag="(0040,A132)" vt="1C"></element>
+        <element tag="(0040,A138)" vt="1C"></element>
+        <element tag="(0040,A13A)" vt="1C"></element>
+    </macro>
+    <macro name="ContainerMacro">
+        <element tag="(0040,A050)" vt="1"></element>
+        <sequence tag="(0040,A504)" vt="1C">
+            <element tag="(0008,0105)" vt="1"></element>
+            <element tag="(0040,DB00)" vt="1"></element>
+        </sequence>
+    </macro>
+    <macro name="DocumentRelationshipMacro">
+    </macro>
+    <macro name="DocumentContentMacro">
+    </macro>
+    <macro name="SOPInstanceReferenceMacro">
+        <element tag="(0008,1150)" vt="1"></element>
+        <element tag="(0008,1155)" vt="1"></element>
+    </macro>
+    <module name="PatientModule">
+        <element tag="(0010,0010)" vt="2"></element>
+        <element tag="(0010,0020)" vt="2"></element>
+        <element tag="(0010,0030)" vt="2"></element>
+        <element tag="(0010,0040)" vt="2"></element>
+        <element tag="(0010,0021)" vt="3"></element>
+        <sequence tag="(0008,1120)" vt="3">
+            <include name="ReferencedInstanceUID"></include>
+        </sequence>
+        <element tag="(0010,0032)" vt="3"></element>
+        <element tag="(0010,1000)" vt="3"></element>
+        <element tag="(0010,1001)" vt="3"></element>
+        <element tag="(0010,2160)" vt="3"></element>
+        <element tag="(0010,4000)" vt="3"></element>
+    </module>
+    <module name="GeneralStudyModule">
+        <element tag="(0020,000D)" vt="1"></element>
+        <element tag="(0008,0020)" vt="2"></element>
+        <element tag="(0008,0030)" vt="2"></element>
+        <element tag="(0008,0090)" vt="2"></element>
+        <sequence tag="(0008,0096)" vt="3">
+            <include name="PersonIdentificationMacro"></include>
+        </sequence>
+        <element tag="(0020,0010)" vt="2"></element>
+        <element tag="(0008,0050)" vt="2"></element>
+        <element tag="(0008,1030)" vt="2"></element>
+        <element tag="(0008,1048)" vt="3"></element>
+        <sequence tag="(0008,1049)" vt="3">
+            <include name="PersonIdentificationMacro"></include>
+        </sequence>
+        <element tag="(0008,1060)" vt="3"></element>
+        <sequence tag="(0008,1062)" vt="3">
+            <include name="PersonIdentificationMacro"></include>
+        </sequence>
+        <sequence tag="(0008,1110)" vt="3">
+            <include name="ReferencedInstanceUID"></include>
+        </sequence>
+        <sequence tag="(0008,1032)" vt="3">
+            <include name="CodeSequenceMacro"></include>
+        </sequence>
+    </module>
+    <module name="PatientStudyModule">
+        <element tag="(0008,1080)" vt="3"></element>
+        <sequence tag="(0008,1084)" vt="3">
+            <include name="CodeSequenceMacro"></include>
+        </sequence>
+        <element tag="(0010,1010)" vt="3"></element>
+        <element tag="(0010,1020)" vt="3"></element>
+        <element tag="(0010,1030)" vt="3"></element>
+        <element tag="(0010,2180)" vt="3"></element>
+        <element tag="(0010,21B0)" vt="3"></element>
+    </module>
+    <module name="GeneralSeriesModule">
+        <element tag="(0008,0060)" vt="1"></element>
+        <element tag="(0020,000E)" vt="1"></element>
+        <element tag="(0020,0011)" vt="2"></element>
+        <element tag="(0020,0060)" vt="2C"></element>
+        <element tag="(0008,0021)" vt="3"></element>
+        <element tag="(0008,0031)" vt="3"></element>
+        <element tag="(0008,1050)" vt="3"></element>
+        <sequence tag="(0008,1052)" vt="3">
+            <include name="PersonIdentificationMacro"></include>
+        </sequence>
+        <element tag="(0018,1030)" vt="3"></element>
+        <element tag="(0008,103E)" vt="3"></element>
+        <element tag="(0008,1070)" vt="3"></element>
+        <sequence tag="(0008,1072)" vt="3">
+            <include name="PersonIdentificationMacro"></include>
+        </sequence>
+        <sequence tag="(0008,1111)" vt="3">
+            <include name="ReferencedInstanceUID"></include>
+        </sequence>
+        <sequence tag="(0008,1250)" vt="3">
+            <element tag="(0020,000D)" vt="1"></element>
+            <element tag="(0020,000E)" vt="1"></element>
+            <sequence tag="(0040,A170)" vt="2">
+                <include name="CodeSequenceMacro"></include>
+            </sequence>
+        </sequence>
+        <element tag="(0018,0015)" vt="3"></element>
+        <element tag="(0018,5100)" vt="2C"></element>
+        <element tag="(0028,0108)" vt="3"></element>
+        <element tag="(0028,0109)" vt="3"></element>
+        <sequence tag="(0040,0275)" vt="3">
+            <element tag="(0040,1001)" vt="1C"></element>
+            <element tag="(0040,1002)" vt="3"></element>
+            <sequence tag="(0040,100A)" vt="3">
+                <include name="CodeSequenceMacro"></include>
+            </sequence>
+            <element tag="(0040,0009)" vt="1C"></element>
+            <element tag="(0040,0007)" vt="3"></element>
+            <sequence tag="(0040,0008)" vt="3">
+                <include name="CodeSequenceMacro"></include>
+                <sequence tag="(0040,0440)" vt="3">
+                    <include name="ContentItemMacro"></include>
+                </sequence>
+                <sequence tag="(0040,0441)" vt="3">
+                    <include name="ContentItemMacro"></include>
+                </sequence>
+            </sequence>
+        </sequence>
+        <element tag="(0040,0253)" vt="3"></element>
+        <element tag="(0040,0244)" vt="3"></element>
+        <element tag="(0040,0245)" vt="3"></element>
+        <element tag="(0040,0254)" vt="3"></element>
+        <sequence tag="(0040,0260)" vt="3">
+            <include name="CodeSequenceMacro"></include>
+            <sequence tag="(0040,0440)" vt="3">
+                <include name="ContentItemMacro"></include>
+            </sequence>
+            <sequence tag="(0040,0441)" vt="3">
+                <include name="ContentItemMacro"></include>
+            </sequence>
+        </sequence>
+        <element tag="(0040,0280)" vt="3"></element>
+    </module>
+    <module name="GeneralEquipmentModule">
+        <element tag="(0008,0070)" vt="2"></element>
+        <element tag="(0008,0080)" vt="3"></element>
+        <element tag="(0008,0081)" vt="3"></element>
+        <element tag="(0008,1010)" vt="3"></element>
+        <element tag="(0008,1040)" vt="3"></element>
+        <element tag="(0008,1090)" vt="3"></element>
+        <element tag="(0018,1000)" vt="3"></element>
+        <element tag="(0018,1008)" vt="3"></element>
+        <element tag="(0018,1020)" vt="3"></element>
+        <element tag="(0018,1050)" vt="3"></element>
+        <element tag="(0018,1200)" vt="3"></element>
+        <element tag="(0018,1201)" vt="3"></element>
+        <element tag="(0028,0120)" vt="3"></element>
+        <element tag="(0028,0121)" vt="1C" dependency="(0028,0120)=..."></element>
+    </module>
+    <module name="VOILUTModule">
+        <sequence tag="(0028,3010)" vt="3">
+            <element tag="(0028,3002)" vt="1C"></element>
+            <element tag="(0028,3003)" vt="3"></element>
+            <element tag="(0028,3006)" vt="1C"></element>
+        </sequence>
+        <element tag="(0028,1050)" vt="1C" dependency="(0028,3010)=!"></element>
+        <element tag="(0028,1051)" vt="1C" dependency="(0028,3010)=!"></element>
+        <element tag="(0028,1055)" vt="3"></element>
+    </module>
+    <module name="ModalityLUTModule">
+        <sequence tag="(0028,3000)" vt="1C" dependency="(0028,1052)=!">
+            <element tag="(0028,3002)" vt="1C"></element>
+            <element tag="(0028,3003)" vt="3"></element>
+            <element tag="(0028,3004)" vt="1C"></element>
+            <element tag="(0028,3006)" vt="1C"></element>
+        </sequence>
+        <element tag="(0028,1052)" vt="1C" dependency="(0028,3000)=!"></element>
+        <element tag="(0028,1053)" vt="1C" dependency="(0028,1052)=..."></element>
+        <element tag="(0028,1054)" vt="1C" dependency="(0028,1052)=..."></element>
+    </module>
+    <module name="SOPCommonModule">
+        <element tag="(0008,0016)" vt="1"></element>
+        <element tag="(0008,0018)" vt="1"></element>
+        <element tag="(0008,0012)" vt="3"></element>
+        <element tag="(0008,0013)" vt="3"></element>
+        <element tag="(0008,0014)" vt="3"></element>
+        <element tag="(0008,001A)" vt="3"></element>
+        <element tag="(0008,001B)" vt="3"></element>
+        <sequence tag="(0008,0110)" vt="3">
+            <element tag="(0008,0102)" vt="1"></element>
+            <element tag="(0008,0112)" vt="1C"></element>
+            <element tag="(0008,010C)" vt="1C"></element>
+            <element tag="(0008,0114)" vt="2C"></element>
+            <element tag="(0008,0115)" vt="3"></element>
+            <element tag="(0008,0103)" vt="3"></element>
+            <element tag="(0008,0116)" vt="3"></element>
+        </sequence>
+        <element tag="(0008,0201)" vt="3"></element>
+        <sequence tag="(0018,A001)" vt="3">
+            <sequence tag="(0040,A170)" vt="1">
+                <include name="CodeSequenceMacro"></include>
+            </sequence>
+            <element tag="(0008,0070)" vt="1"></element>
+            <element tag="(0008,0080)" vt="3"></element>
+            <element tag="(0008,0081)" vt="3"></element>
+            <element tag="(0008,1010)" vt="3"></element>
+            <element tag="(0008,1040)" vt="3"></element>
+            <element tag="(0008,1090)" vt="3"></element>
+            <element tag="(0018,1000)" vt="3"></element>
+            <element tag="(0018,1020)" vt="3"></element>
+            <element tag="(0018,1050)" vt="3"></element>
+            <element tag="(0018,1200)" vt="3"></element>
+            <element tag="(0018,1201)" vt="3"></element>
+            <element tag="(0018,A002)" vt="3"></element>
+            <element tag="(0018,A003)" vt="3"></element>
+        </sequence>
+        <element tag="(0020,0013)" vt="3"></element>
+        <element tag="(0100,0410)" vt="3"></element>
+        <element tag="(0100,0420)" vt="3"></element>
+        <element tag="(0100,0424)" vt="3"></element>
+        <element tag="(0100,0426)" vt="3"></element>
+        <sequence tag="(4FFE,0001)" vt="3">
+            <element tag="(0400,0005)" vt="1"></element>
+            <element tag="(0400,0010)" vt="1"></element>
+            <element tag="(0400,0015)" vt="1"></element>
+            <element tag="(0400,0020)" vt="1"></element>
+        </sequence>
+        <sequence tag="(FFFA,FFFA)" vt="3">
+            <element tag="(0400,0005)" vt="1"></element>
+            <element tag="(0400,0100)" vt="1"></element>
+            <element tag="(0400,0105)" vt="1"></element>
+            <element tag="(0400,0110)" vt="1"></element>
+            <element tag="(0400,0115)" vt="1"></element>
+            <element tag="(0400,0120)" vt="1"></element>
+            <element tag="(0400,0305)" vt="1C"></element>
+            <element tag="(0400,0310)" vt="3"></element>
+        </sequence>
+        <sequence tag="(0400,0500)" vt="1C">
+            <element tag="(0400,0510)" vt="1"></element>
+            <element tag="(0400,0520)" vt="1"></element>
+        </sequence>
+    </module>
+    <module name="GeneralImageModule">
+        <element tag="(0018,1004)" vt="3"></element>
+        <element tag="(0020,0013)" vt="2"></element>
+        <element tag="(0020,0020)" vt="2C" dependency="(0020,0037)=!"></element>
+        <element tag="(0008,0023)" vt="2C"></element>
+        <element tag="(0008,0033)" vt="2C"></element>
+        <element tag="(0008,0008)" vt="3"></element>
+        <element tag="(0020,0012)" vt="3"></element>
+        <element tag="(0008,0022)" vt="3"></element>
+        <element tag="(0008,0032)" vt="3"></element>
+        <element tag="(0008,002A)" vt="3"></element>
+        <sequence tag="(0008,1140)" vt="3">
+            <element tag="(0008,1150)" vt="1C"></element>
+            <element tag="(0008,1155)" vt="1C"></element>
+            <element tag="(0008,1160)" vt="3"></element>
+            <sequence tag="(0040,A170)" vt="3">
+                <include name="CodeSequenceMacro"></include>
+            </sequence>
+        </sequence>
+        <element tag="(0008,2111)" vt="3"></element>
+        <sequence tag="(0008,9215)" vt="3">
+            <include name="CodeSequenceMacro"></include>
+        </sequence>
+        <sequence tag="(0008,2112)" vt="3">
+            <include name="ReferencedInstanceUID"></include>
+            <element tag="(0008,1160)" vt="3"></element>
+            <sequence tag="(0040,A170)" vt="3">
+                <include name="CodeSequenceMacro"></include>
+            </sequence>
+            <element tag="(0028,135A)" vt="3"></element>
+            <element tag="(0020,0020)" vt="1C" dependency="(0028,135A)=REORIENTED_ONLY"></element>
+        </sequence>
+        <sequence tag="(0008,113A)" vt="3">
+            <element tag="(0020,000D)" vt="1"></element>
+            <sequence tag="(0008,1115)" vt="1">
+                <element tag="(0020,000E)" vt="1"></element>
+                <element tag="(0008,0054)" vt="3"></element>
+                <element tag="(0088,0130)" vt="3"></element>
+                <element tag="(0088,0140)" vt="3"></element>
+                <sequence tag="(0008,1199)" vt="1">
+                    <include name="ReferencedInstanceUID"></include>
+                </sequence>
+            </sequence>
+            <sequence tag="(0040,A170)" vt="3">
+                <include name="CodeSequenceMacro"></include>
+            </sequence>
+        </sequence>
+        <element tag="(0020,1002)" vt="3"></element>
+        <element tag="(0020,4000)" vt="3"></element>
+        <element tag="(0028,0300)" vt="3"></element>
+        <element tag="(0028,0301)" vt="3"></element>
+        <element tag="(0028,2110)" vt="3"></element>
+        <element tag="(0028,2112)" vt="3"></element>
+        <element tag="(0028,2114)" vt="3"></element>
+        <sequence tag="(0088,0200)" vt="3">
+            <include name="ImagePixelMacro"></include>
+        </sequence>
+    </module>
+    <module name="PresentationLUTmodule">
+        <element tag="(2050,0020)" vt="2"></element>
+    </module>
+    <module name="ImagePixelModule">
+        <include name="ImagePixelMacro"></include>
+    </module>
+    <module name="ImagePlaneModule">
+        <element tag="(0028,0030)" vt="2"></element>
+    </module>
+    <module name="ContrastBolusModule">
+        <element tag="(0018,0010)" vt="2"></element>
+        <sequence tag="(0018,0012)" vt="3">
+            <include name="CodeSequenceMacro"></include>
+        </sequence>
+        <element tag="(0018,1040)" vt="3"></element>
+        <sequence tag="(0018,0014)" vt="3">
+            <include name="CodeSequenceMacro"></include>
+        </sequence>
+        <sequence tag="(0018,002A)" vt="3">
+            <include name="CodeSequenceMacro"></include>
+        </sequence>
+        <element tag="(0018,1041)" vt="3"></element>
+        <element tag="(0018,1042)" vt="3"></element>
+        <element tag="(0018,1043)" vt="3"></element>
+        <element tag="(0018,1044)" vt="3"></element>
+    </module>
+    <module name="SCEquipmentModule">
+        <element tag="(0008,0064)" vt="2"></element>
+        <element tag="(0008,0060)" vt="3"></element>
+        <element tag="(0018,1010)" vt="3"></element>
+        <element tag="(0018,1016)" vt="3"></element>
+        <element tag="(0018,1018)" vt="3"></element>
+        <element tag="(0018,1019)" vt="3"></element>
+        <element tag="(0018,1022)" vt="3"></element>
+        <element tag="(0018,1023)" vt="3"></element>
+    </module>
+    <module name="SCImageModule">
+        <element tag="(0018,1012)" vt="3"></element>
+        <element tag="(0018,1014)" vt="3"></element>
+    </module>
+    <module name="CRSeriesModule">
+        <element tag="(0018,0015)" vt="2"></element>
+        <element tag="(0018,5101)" vt="2"></element>
+        <element tag="(0018,1160)" vt="3"></element>
+        <element tag="(0018,1180)" vt="3"></element>
+        <element tag="(0018,1190)" vt="3"></element>
+        <element tag="(0018,1260)" vt="3"></element>
+        <element tag="(0018,1261)" vt="3"></element>
+    </module>
+    <module name="CRImageModule">
+        <element tag="(0028,0004)" vt="1"></element>
+        <element tag="(0018,0060)" vt="3"></element>
+        <element tag="(0018,1004)" vt="3"></element>
+        <element tag="(0018,1110)" vt="3"></element>
+        <element tag="(0018,1111)" vt="3"></element>
+        <element tag="(0018,1150)" vt="3"></element>
+        <element tag="(0018,1151)" vt="3"></element>
+        <element tag="(0018,1152)" vt="3"></element>
+        <element tag="(0018,1153)" vt="3"></element>
+        <element tag="(0018,1164)" vt="2"></element>
+        <element tag="(0018,1170)" vt="3"></element>
+        <element tag="(0018,1400)" vt="3"></element>
+        <element tag="(0018,1401)" vt="3"></element>
+        <element tag="(0018,1402)" vt="3"></element>
+        <element tag="(0018,1403)" vt="3"></element>
+        <element tag="(0018,1404)" vt="3"></element>
+        <element tag="(0018,1405)" vt="3"></element>
+        <element tag="(0018,6000)" vt="3"></element>
+        <include name="ExposureIndexMacro"></include>
+        <element tag="(0028,1050)" vt="1C" dependency="(0028,3010)=!"></element>
+        <element tag="(0028,1051)" vt="1C" dependency="(0028,3010)=!"></element>
+        <sequence tag="(0008,2218)" vt="3">
+            <include name="CodeSequenceMacro"></include>
+            <sequence tag="(0008,2220)" vt="3">
+                <include name="CodeSequenceMacro"></include>
+            </sequence>
+        </sequence>
+        <sequence tag="(0008,2228)" vt="3">
+            <include name="CodeSequenceMacro"></include>
+            <sequence tag="(0008,2230)" vt="3">
+                <include name="CodeSequenceMacro"></include>
+            </sequence>
+        </sequence>
+    </module>
+    <module name="DXPositioningModule">
+        <sequence tag="(0018,5104)" vt="3">
+            <include name="CodeSequenceMacro"></include>
+        </sequence>
+        <element tag="(0018,5100)" vt="3"></element>
+        <element tag="(0018,5101)" vt="3"></element>
+        <sequence tag="(0054,0220)" vt="3">
+            <include name="CodeSequenceMacro"></include>
+            <sequence tag="(0054,0222)" vt="3">
+                <include name="CodeSequenceMacro"></include>
+            </sequence>
+        </sequence>
+        <sequence tag="(0054,0410)" vt="3">
+            <include name="CodeSequenceMacro"></include>
+            <sequence tag="(0054,0412)" vt="3">
+                <include name="CodeSequenceMacro"></include>
+            </sequence>
+        </sequence>
+        <sequence tag="(0054,0414)" vt="3">
+            <include name="CodeSequenceMacro"></include>
+        </sequence>
+        <element tag="(0018,1111)" vt="3"></element>
+        <element tag="(0018,1110)" vt="3"></element>
+        <element tag="(0018,1114)" vt="3"></element>
+        <element tag="(0018,1508)" vt="2"></element>
+        <element tag="(0018,1510)" vt="3"></element>
+        <element tag="(0018,1511)" vt="3"></element>
+        <element tag="(0018,1530)" vt="3"></element>
+        <element tag="(0018,1531)" vt="3"></element>
+        <element tag="(0018,1450)" vt="3" dependency="(0018,1508)=COLUMN"></element>
+        <element tag="(0018,113A)" vt="3"></element>
+        <element tag="(0018,1138)" vt="3" dependency="(0018,113A)=TILTING"></element>
+        <element tag="(0018,11A0)" vt="3"></element>
+        <element tag="(0018,11A2)" vt="3"></element>
+    </module>
+    <module name="DXSeriesModule">
+        <element tag="(0008,0060)" vt="1"></element>
+        <sequence tag="(0008,1111)" vt="1C">
+            <include name="ReferencedInstanceUID"></include>
+        </sequence>
+        <element tag="(0008,0068)" vt="1"></element>
+    </module>
+    <module name="DXAnatomyImagedModule">
+        <element tag="(0020,0062)" vt="1"></element>
+        <sequence tag="(0008,2218)" vt="2">
+            <include name="CodeSequenceMacro"></include>
+            <sequence tag="(0008,2220)" vt="3">
+                <include name="CodeSequenceMacro"></include>
+            </sequence>
+        </sequence>
+        <sequence tag="(0008,2228)" vt="3">
+            <include name="CodeSequenceMacro"></include>
+            <sequence tag="(0008,2230)" vt="3">
+                <include name="CodeSequenceMacro"></include>
+            </sequence>
+        </sequence>
+    </module>
+    <module name="DXImageModule">
+        <element tag="(0008,0008)" vt="1"></element>
+        <element tag="(0028,0002)" vt="1"></element>
+        <element tag="(0028,0004)" vt="1"></element>
+        <element tag="(0028,0100)" vt="1"></element>
+        <element tag="(0028,0101)" vt="1"></element>
+        <element tag="(0028,0102)" vt="1"></element>
+        <element tag="(0028,0103)" vt="1"></element>
+        <element tag="(0028,1040)" vt="1"></element>
+        <element tag="(0028,1041)" vt="1"></element>
+        <element tag="(0028,1052)" vt="1"></element>
+        <element tag="(0028,1053)" vt="1"></element>
+        <element tag="(0028,1054)" vt="1"></element>
+        <element tag="(0028,2110)" vt="1"></element>
+        <element tag="(0028,2112)" vt="1C"></element>
+        <element tag="(0008,2111)" vt="3"></element>
+        <element tag="(0018,1400)" vt="3"></element>
+        <element tag="(0018,1401)" vt="3"></element>
+        <element tag="(0020,0020)" vt="1"></element>
+        <element tag="(0050,0004)" vt="3"></element>
+        <element tag="(0028,0301)" vt="1"></element>
+        <sequence tag="(0028,3010)" vt="1C">
+            <element tag="(0028,3002)" vt="1C"></element>
+            <element tag="(0028,3003)" vt="3"></element>
+            <element tag="(0028,3006)" vt="1C"></element>
+        </sequence>
+        <element tag="(0028,1050)" vt="1C" dependency="(0028,3010)=!"></element>
+        <element tag="(0028,1051)" vt="1C" dependency="(0028,3010)=!"></element>
+        <element tag="(0028,1055)" vt="3"></element>
+    </module>
+    <module name="DXDetectorModule">
+        <element tag="(0018,7004)" vt="2"></element>
+        <element tag="(0018,7005)" vt="3"></element>
+        <element tag="(0018,7006)" vt="3"></element>
+        <element tag="(0018,7008)" vt="3"></element>
+        <element tag="(0018,700A)" vt="3"></element>
+        <element tag="(0018,700C)" vt="3"></element>
+        <element tag="(0018,700E)" vt="3"></element>
+        <element tag="(0018,7010)" vt="3"></element>
+        <element tag="(0018,7011)" vt="3"></element>
+        <element tag="(0018,7012)" vt="3"></element>
+        <element tag="(0018,7014)" vt="3"></element>
+        <element tag="(0018,7016)" vt="3"></element>
+        <element tag="(0018,701A)" vt="3"></element>
+        <element tag="(0018,702A)" vt="3"></element>
+        <element tag="(0018,702B)" vt="3"></element>
+        <element tag="(0018,7000)" vt="3"></element>
+        <element tag="(0018,7001)" vt="3"></element>
+        <element tag="(0018,6000)" vt="3"></element>
+        <element tag="(0018,1147)" vt="3"></element>
+        <element tag="(0018,1149)" vt="3"></element>
+        <element tag="(0018,7030)" vt="1C"></element>
+        <element tag="(0018,7032)" vt="1C"></element>
+        <element tag="(0018,7034)" vt="1C"></element>
+        <element tag="(0018,1164)" vt="1"></element>
+        <element tag="(0018,7020)" vt="3"></element>
+        <element tag="(0018,7022)" vt="3"></element>
+        <element tag="(0018,7024)" vt="3"></element>
+        <element tag="(0018,7026)" vt="3"></element>
+        <element tag="(0018,7028)" vt="3"></element>
+    </module>
+    <module name="AcquisitionContextModule">
+        <sequence tag="(0040,0555)" vt="2">
+            <element tag="(0040,A040)" vt="3"></element>
+            <sequence tag="(0040,A043)" vt="1">
+                <include name="CodeSequenceMacro"></include>
+            </sequence>
+            <element tag="(0040,A136)" vt="1C"></element>
+            <element tag="(0040,A30A)" vt="1C"></element>
+            <sequence tag="(0040,08EA)" vt="1C">
+                <include name="CodeSequenceMacro"></include>
+            </sequence>
+            <element tag="(0040,A121)" vt="1C"></element>
+            <element tag="(0040,A122)" vt="1C"></element>
+            <element tag="(0040,A123)" vt="1C"></element>
+            <element tag="(0040,A160)" vt="1C"></element>
+            <sequence tag="(0040,A168)" vt="1C">
+                <include name="CodeSequenceMacro"></include>
+            </sequence>
+        </sequence>
+        <element tag="(0040,0556)" vt="3"></element>
+    </module>
+    <module name="XRayAcquisitionDoseModule">
+        <element tag="(0018,0060)" vt="3"></element>
+        <element tag="(0018,1151)" vt="3"></element>
+        <element tag="(0018,8151)" vt="3"></element>
+        <element tag="(0018,1150)" vt="3"></element>
+        <element tag="(0018,8150)" vt="3"></element>
+        <element tag="(0018,1152)" vt="3"></element>
+        <element tag="(0018,1153)" vt="3"></element>
+        <element tag="(0018,1110)" vt="3"></element>
+        <element tag="(0018,1111)" vt="3"></element>
+        <element tag="(0018,115E)" vt="3"></element>
+        <element tag="(0018,11A0)" vt="3"></element>
+        <element tag="(0018,1405)" vt="3"></element>
+        <include name="ExposureIndexMacro"></include>
+        <element tag="(0040,0302)" vt="3"></element>
+        <element tag="(0040,8302)" vt="3"></element>
+        <element tag="(0040,0303)" vt="3"></element>
+        <element tag="(0040,0306)" vt="3"></element>
+        <element tag="(0040,0310)" vt="3"></element>
+        <element tag="(0040,0312)" vt="3"></element>
+        <element tag="(0040,0314)" vt="3"></element>
+        <element tag="(0040,0316)" vt="3"></element>
+        <element tag="(0040,0318)" vt="3" dependency="(0040,0316)=..."></element>
+        <element tag="(0018,1191)" vt="3"></element>
+        <element tag="(0018,7050)" vt="3"></element>
+        <element tag="(0018,7052)" vt="3" dependency="(0018,7050)=..."></element>
+        <element tag="(0018,7054)" vt="3" dependency="(0018,7050)=..."></element>
+        <element tag="(0018,1156)" vt="3"></element>
+    </module>
+    <module name="XRayGenerationModule">
+        <element tag="(0018,0060)" vt="3"></element>
+        <element tag="(0018,1151)" vt="3"></element>
+        <element tag="(0018,8151)" vt="3"></element>
+        <element tag="(0018,1150)" vt="3"></element>
+        <element tag="(0018,8150)" vt="3"></element>
+        <element tag="(0018,1152)" vt="3"></element>
+        <element tag="(0018,1153)" vt="3"></element>
+        <element tag="(0018,7060)" vt="3"></element>
+        <element tag="(0018,7062)" vt="3"></element>
+        <element tag="(0018,7064)" vt="3"></element>
+        <element tag="(0018,7065)" vt="3"></element>
+        <element tag="(0018,1190)" vt="3"></element>
+        <element tag="(0018,1191)" vt="3"></element>
+        <element tag="(0018,1156)" vt="3"></element>
+    </module>
+    <module name="XRayFiltrationModule">
+        <element tag="(0018,1160)" vt="3"></element>
+        <element tag="(0018,7050)" vt="3"></element>
+        <element tag="(0018,7052)" vt="3" dependency="(0018,7050)=..."></element>
+        <element tag="(0018,7054)" vt="3" dependency="(0018,7050)=..."></element>
+    </module>
+    <module name="XRayGridModule">
+        <element tag="(0018,1166)" vt="3"></element>
+        <element tag="(0018,7040)" vt="3"></element>
+        <element tag="(0018,7041)" vt="3"></element>
+        <element tag="(0018,7042)" vt="3"></element>
+        <element tag="(0018,7044)" vt="3"></element>
+        <element tag="(0018,7046)" vt="3"></element>
+        <element tag="(0018,7048)" vt="3" dependency="(0018,1166)=RECIPROCATING"></element>
+        <element tag="(0018,704C)" vt="3"></element>
+    </module>
+    <module name="XRayCollimatorModule">
+        <element tag="(0018,1700)" vt="1"></element>
+        <element tag="(0018,1702)" vt="1C" dependency="(0018,1700)=RECTANGULAR"></element>
+        <element tag="(0018,1704)" vt="1C" dependency="(0018,1700)=RECTANGULAR"></element>
+        <element tag="(0018,1706)" vt="1C" dependency="(0018,1700)=RECTANGULAR"></element>
+        <element tag="(0018,1708)" vt="1C" dependency="(0018,1700)=RECTANGULAR"></element>
+        <element tag="(0018,1710)" vt="1C" dependency="(0018,1700)=CIRCULAR"></element>
+        <element tag="(0018,1712)" vt="1C" dependency="(0018,1700)=CIRCULAR"></element>
+        <element tag="(0018,1720)" vt="1C" dependency="(0018,1700)=POLYGONAL"></element>
+    </module>
+    <module name="MammographySeriesModule">
+        <element tag="(0008,0060)" vt="1"></element>
+    </module>
+    <module name="MammographyImageModule">
+        <element tag="(0018,1508)" vt="1"></element>
+        <element tag="(0018,1110)" vt="3"></element>
+        <element tag="(0018,1111)" vt="3"></element>
+        <element tag="(0018,1510)" vt="3"></element>
+        <element tag="(0018,1511)" vt="3"></element>
+        <element tag="(0020,0062)" vt="1"></element>
+        <element tag="(0040,0318)" vt="1"></element>
+        <element tag="(0028,1300)" vt="3"></element>
+        <element tag="(0028,1350)" vt="3"></element>
+        <element tag="(0028,1351)" vt="3"></element>
+        <sequence tag="(0054,0220)" vt="2">
+            <include name="CodeSequenceMacro"></include>
+            <sequence tag="(0054,0222)" vt="2">
+                <include name="CodeSequenceMacro"></include>
+            </sequence>
+        </sequence>
+        <include name="GeneralAnatomyMandatoryMacro"></include>
+    </module>
+    <module name="PresentationSeriesModule">
+        <element tag="(0008,0060)" vt="1"></element>
+    </module>
+    <module name="DisplayedAreaModule">
+        <sequence tag="(0070,005A)" vt="1">
+            <sequence tag="(0008,1140)" vt="3">
+                <element tag="(0008,1150)" vt="1C"></element>
+                <element tag="(0008,1155)" vt="1C"></element>
+                <element tag="(0008,1160)" vt="3"></element>
+            </sequence>
+            <element tag="(0070,0052)" vt="1"></element>
+            <element tag="(0070,0053)" vt="1"></element>
+            <element tag="(0070,0100)" vt="1"></element>
+            <element tag="(0070,0101)" vt="1C" dependency="(0070,0100)=TRUE SIZE"></element>
+            <element tag="(0070,0102)" vt="1C" dependency="(0070,0101)=!"></element>
+            <element tag="(0070,0103)" vt="1C" dependency="(0070,0100)=MAGNIFY"></element>
+        </sequence>
+    </module>
+    <module name="SoftcopyPresentationLUTmodule">
+        <sequence tag="(2050,0010)" vt="1C">
+            <element tag="(0028,3002)" vt="1C" dependency="(2050,0020)=!"></element>
+            <element tag="(0028,3003)" vt="1C" dependency="(2050,0020)=!"></element>
+            <element tag="(0028,3006)" vt="1C" dependency="(2050,0020)=!"></element>
+        </sequence>
+        <element tag="(2050,0020)" vt="1C"></element>
+    </module>
+    <module name="PresentationStateModule">
+        <element tag="(0020,0013)" vt="1"></element>
+        <element tag="(0070,0080)" vt="1"></element>
+        <element tag="(0070,0081)" vt="2"></element>
+        <element tag="(0070,0082)" vt="1"></element>
+        <element tag="(0070,0083)" vt="1"></element>
+        <element tag="(0070,0084)" vt="2"></element>
+        <sequence tag="(0008,1115)" vt="1">
+            <element tag="(0020,000E)" vt="1"></element>
+            <sequence tag="(0008,1140)" vt="1">
+                <element tag="(0008,1150)" vt="1"></element>
+                <element tag="(0008,1155)" vt="1"></element>
+                <element tag="(0008,1160)" vt="1"></element>
+            </sequence>
+        </sequence>
+        <element tag="(0018,1622)" vt="1C"></element>
+        <sequence tag="(0028,6100)" vt="1C">
+            <element tag="(0028,6101)" vt="1"></element>
+            <element tag="(0028,6112)" vt="1C"></element>
+            <element tag="(0028,1090)" vt="1C" dependency="(0028,6100)=..."></element>
+        </sequence>
+    </module>
+    <module name="DisplayShutterModule">
+        <element tag="(0018,1600)" vt="2"></element>
+        <element tag="(0018,1602)" vt="1C" dependency="(0018,1600)=RECTANGULAR"></element>
+        <element tag="(0018,1604)" vt="1C" dependency="(0018,1600)=RECTANGULAR"></element>
+        <element tag="(0018,1606)" vt="1C" dependency="(0018,1600)=RECTANGULAR"></element>
+        <element tag="(0018,1608)" vt="1C" dependency="(0018,1600)=RECTANGULAR"></element>
+        <element tag="(0018,1610)" vt="1C" dependency="(0018,1600)=CIRCULAR"></element>
+        <element tag="(0018,1612)" vt="1C" dependency="(0018,1600)=CIRCULAR"></element>
+        <element tag="(0018,1620)" vt="2C" dependency="(0018,1600)=POLYGONAL"></element>
+        <element tag="(0018,1622)" vt="3"></element>
+    </module>
+    <module name="SpatialTransformationModule">
+        <element tag="(0070,0042)" vt="1"></element>
+        <element tag="(0070,0041)" vt="1"></element>
+    </module>
+    <module name="SoftcopyVOILUTModule">
+        <sequence tag="(0028,3110)" vt="1">
+            <sequence tag="(0008,1140)" vt="1C">
+                <element tag="(0008,1150)" vt="1C"></element>
+                <element tag="(0008,1155)" vt="1C"></element>
+                <element tag="(0008,1160)" vt="1"></element>
+            </sequence>
+            <sequence tag="(0028,3010)" vt="1C">
+                <element tag="(0028,3002)" vt="1C"></element>
+                <element tag="(0028,3003)" vt="3"></element>
+                <element tag="(0028,3006)" vt="1C"></element>
+            </sequence>
+            <element tag="(0028,1050)" vt="1C" dependency="(0028,3010)=!"></element>
+            <element tag="(0028,1051)" vt="1C" dependency="(0028,3010)=!"></element>
+            <element tag="(0028,1055)" vt="3"></element>
+        </sequence>
+    </module>
+    <module name="OverlayPlaneModule">
+      <element tag="(6000,0010)" vt="3"></element>
+      <element tag="(6000,0011)" vt="3"></element>
+      <element tag="(6000,0040)" vt="3"></element>
+      <element tag="(6000,0050)" vt="3"></element>
+      <element tag="(6000,0100)" vt="3"></element>
+      <element tag="(6000,0102)" vt="3"></element>
+      <element tag="(6000,3000)" vt="3"></element>
+    </module>
+    <module name="FrameOfReferenceModule">
+        <element tag="(0020,0052)" vt="1"></element>
+        <element tag="(0020,1040)" vt="2"></element>
+    </module>
+    <module name="DeviceModule">
+        <sequence tag="(0050,0010)" vt="3">
+            <sequence tag="(0008,1140)" vt="1C">
+                <include name="CodeSequenceMacro"></include>
+                <element tag="(0008,0070)" vt="3"></element>
+                <element tag="(0008,1090)" vt="3"></element>
+                <element tag="(0018,1000)" vt="3"></element>
+                <element tag="(0018,1003)" vt="3"></element>
+                <element tag="(0050,0014)" vt="3"></element>
+                <element tag="(0050,0016)" vt="3"></element>
+                <element tag="(0050,0017)" vt="2C" dependency="(0050,0016)=..."></element>
+                <element tag="(0050,0018)" vt="3"></element>
+                <element tag="(0050,0019)" vt="3"></element>
+                <element tag="(0050,0020)" vt="3"></element>
+            </sequence>
+        </sequence>
+    </module>
+    <module name="SpecimenModule">
+        <include name="SpecimenMacro"></include>
+    </module>
+    <module name="CTImageModule">
+        <element tag="(0008,0008)" vt="1"></element>
+        <element tag="(0028,0002)" vt="1"></element>
+        <element tag="(0028,0004)" vt="1"></element>
+        <element tag="(0028,0100)" vt="1"></element>
+        <element tag="(0028,0101)" vt="1"></element>
+        <element tag="(0028,0102)" vt="1"></element>
+        <element tag="(0028,1052)" vt="1"></element>
+        <element tag="(0028,1053)" vt="1"></element>
+        <element tag="(0028,1054)" vt="1C"></element>
+        <element tag="(0018,0060)" vt="2"></element>
+        <element tag="(0020,0012)" vt="2"></element>
+        <element tag="(0018,0022)" vt="3"></element>
+        <element tag="(0018,0090)" vt="3"></element>
+        <element tag="(0018,9313)" vt="3"></element>
+        <element tag="(0018,1100)" vt="3"></element>
+        <element tag="(0018,9318)" vt="3"></element>
+        <element tag="(0018,1110)" vt="3"></element>
+        <element tag="(0018,1111)" vt="3"></element>
+        <element tag="(0018,1120)" vt="3"></element>
+        <element tag="(0018,1130)" vt="3"></element>
+        <element tag="(0018,1140)" vt="3"></element>
+        <element tag="(0018,1150)" vt="3"></element>
+        <element tag="(0018,1151)" vt="3"></element>
+        <element tag="(0018,1152)" vt="3"></element>
+        <element tag="(0018,1153)" vt="3"></element>
+        <element tag="(0018,1160)" vt="3"></element>
+        <element tag="(0018,1170)" vt="3"></element>
+        <element tag="(0018,1190)" vt="3"></element>
+        <element tag="(0018,1210)" vt="3"></element>
+        <element tag="(0018,9305)" vt="3"></element>
+        <element tag="(0018,9306)" vt="3"></element>
+        <element tag="(0018,9307)" vt="3"></element>
+        <element tag="(0018,9309)" vt="3"></element>
+        <element tag="(0018,9310)" vt="3"></element>
+        <element tag="(0018,9311)" vt="3"></element>
+        <element tag="(0018,9323)" vt="3"></element>
+        <element tag="(0018,9324)" vt="3"></element>
+        <element tag="(0018,9345)" vt="3"></element>
+        <sequence tag="(0018,9346)" vt="3">
+            <include name="CodeSequenceMacro"></include>
+        </sequence>
+        <include name="GeneralAnatomyOptionalMacro"></include>
+        <element tag="(0018,9351)" vt="3"></element>
+        <element tag="(0018,9352)" vt="3"></element>
+        <element tag="(0018,9353)" vt="1C"></element>
+        <element tag="(0018,9360)" vt="3"></element>
+    </module>
+    <module name="CTSeriesModule">
+    </module>
+    <module name="SynchronizationModule">
+    </module>
+    <module name="EnhancedGeneralEquipmentModule">
+    </module>
+    <module name="EnhancedContrastBolusModule">
+    </module>
+    <module name="MultiframeFunctionalGroupsModule">
+    </module>
+    <module name="MultiframeDimensionModule">
+    </module>
+    <module name="CardiacSynchronizationModule">
+    </module>
+    <module name="RespiratorySynchronizationModule">
+    </module>
+    <module name="SupplementalPaletteColorLookupTableModule">
+    </module>
+    <module name="AcquisitionContextModule">
+    </module>
+    <module name="EnhancedCTImageModule">
+    </module>
+    <module name="FrameExtractionModule">
+    </module>
+    <module name="SRDocumentSeries">
+        <element tag="(0008,0060)" vt="1"></element>
+        <element tag="(0020,000E)" vt="1"></element>
+        <element tag="(0020,0011)" vt="1"></element>
+        <element tag="(0008,0021)" vt="3"></element>
+        <element tag="(0008,0031)" vt="3"></element>
+        <element tag="(0008,103E)" vt="3"></element>
+        <sequence tag="(0008,103F)" vt="3">
+            <include name="CodeSequenceMacro"></include>
+        </sequence>
+        <sequence tag="(0008,1111)" vt="2">
+            <include name="ReferencedInstanceUID"></include>
+        </sequence>
+    </module>
+    <module name="SRDocumentGeneral">
+        <element tag="(0020,0013)" vt="1"></element>
+        <element tag="(0040,A496)" vt="3"></element>
+        <element tag="(0040,A491)" vt="1"></element>
+        <element tag="(0040,A492)" vt="3"></element>
+        <element tag="(0040,A493)" vt="1"></element>
+        <element tag="(0008,0023)" vt="1"></element>
+        <element tag="(0008,0033)" vt="1"></element>
+    </module>
+    <module name="SRDocumentContent">
+        <element tag="(0040,A040)" vt="1" ></element>
+        <element tag="(0040,A160)" vt="1C" dependency="(0040,A040)=TEXT"></element>
+        <element tag="(0040,A120)" vt="1C" dependency="(0040,A040)=DATETIME"></element>
+        <element tag="(0040,A121)" vt="1C" dependency="(0040,A040)=DATE"></element>
+        <element tag="(0040,A122)" vt="1C" dependency="(0040,A040)=TIME"></element>
+        <element tag="(0040,A123)" vt="1C" dependency="(0040,A040)=PNAME"></element>
+        <element tag="(0040,A124)" vt="1C" dependency="(0040,A040)=UIDREF"></element>
+        <include name="NumericMeasurementMacro" dependency="(0040,A040)=NUM"></include>
+        <include name="CodeMacro" dependency="(0040,A040)=CODE"></include>
+        <include name="CompositeObjectReferenceMacro" dependency="(0040,A040)=COMPOSITE"></include>
+        <include name="ImageReferenceMacro" dependency="(0040,A040)=IMAGE"></include>
+        <include name="WaveformReferenceMacro" dependency="(0040,A040)=WAVEFORM"></include>
+        <include name="SpatialCoordinatesMacro" dependency="(0040,A040)=SCOORD"></include>
+        <include name="3DSpatialCoordinatesMacro" dependency="(0040,A040)=SCOORD3D"></include>
+        <include name="TemporalCoordinatesMacro" dependency="(0040,A040)=TCOORD"></include>
+        <include name="ContainerMacro" dependency="(0040,A040)=CONTAINER"></include>
+        <element tag="(0040,A032)" vt="1C" dependency=""></element>
+        <sequence tag="(0040,A730)" vt="1C">
+            <element tag="(0040,A010)" vt="1" ></element>
+            <include name="DocumentRelationshipMacro" dependency=""></include>
+            <include name="DocumentContentMacro" dependency=""></include>
+            <element tag="(0040,DB73)" vt="1C" dependency=""></element>
+        </sequence>
+    </module>
+    <override name="Commonoverride">
+    </override>
+    <override name="SCoverride">
+        <element tag="(0008,0060)" vt="1"></element>
+        <element tag="(0008,0064)" vt="1"></element>
+    </override>
+    <override name="CRoverride">
+        <element tag="(0008,0060)" vt="1"></element>
+    </override>
+    <override name="DXoverride">
+        <element tag="(0008,0060)" vt="1"></element>
+        <element tag="(0008,0068)" vt="1"></element>
+    </override>
+    <override name="MGoverride">
+        <element tag="(0008,0060)" vt="1"></element>
+        <element tag="(0008,0068)" vt="1"></element>
+    </override>
+    <override name="GSPSoverride">
+        <element tag="(0008,0060)" vt="1"></element>
+        <element tag="(0008,0068)" vt="1"></element>
+    </override>
+    <iod name="SC" classes="SecondaryCaptureImageStorage">
+        <include name="PatientModule"></include>
+        <include name="PatientStudyModule"></include>
+        <include name="GeneralStudyModule"></include>
+        <include name="GeneralSeriesModule"></include>
+        <include name="GeneralImageModule"></include>
+        <include name="ImagePixelModule"></include>
+        <include name="SOPCommonModule"></include>
+        <include name="GeneralEquipmentModule"></include>
+        <include name="SCEquipmentModule"></include>
+        <include name="ContrastBolusModule"></include>
+        <include name="ModalityLUTModule"></include>
+        <include name="SCImageModule"></include>
+        <include name="OverlayPlaneModule"></include>
+        <include name="VOILUTModule"></include>
+        <include name="PresentationLUTmodule"></include>
+    </iod>
+    <iod name="SR" classes="StructuredReport">
+      <include name="PatientModule"></include>
+      <include name="GeneralStudyModule"></include>
+      <include name="PatientStudyModule"></include>
+      <include name="SRDocumentSeries"></include>
+      <include name="GeneralEquipmentModule"></include>
+      <include name="SRDocumentGeneral"></include>
+      <include name="SRDocumentContent"></include>
+      <include name="SOPCommonModule"></include>
+    </iod>
+    <iod name="CR" classes="ComputedRadiographyImageStorageSOPClass">
+        <include name="PatientModule"></include>
+        <include name="GeneralStudyModule"></include>
+        <include name="PatientStudyModule"></include>
+        <include name="GeneralSeriesModule"></include>
+        <include name="CRSeriesModule"></include>
+        <include name="GeneralEquipmentModule"></include>
+        <include name="GeneralImageModule"></include>
+        <include name="ImagePixelModule"></include>
+        <include name="ContrastBolusModule"></include>
+        <include name="CRImageModule"></include>
+        <include name="OverlayPlaneModule"></include>
+        <include name="ModalityLUTModule"></include>
+        <include name="VOILUTModule"></include>
+        <include name="SOPCommonModule"></include>
+        <include name="ImagePlaneModule"></include>
+        <include name="PresentationLUTmodule"></include>
+    </iod>
+    <iod name="CT" classes="CTImageStorage">
+        <include name="PatientModule"></include>
+        <include name="GeneralStudyModule"></include>
+        <include name="PatientStudyModule"></include>
+        <include name="GeneralSeriesModule"></include>
+        <include name="FrameOfReferenceModule"></include>
+        <include name="GeneralEquipmentModule"></include>
+        <include name="GeneralImageModule"></include>
+        <include name="ImagePlaneModule"></include>
+        <include name="ImagePixelModule"></include>
+        <include name="ContrastBolusModule"></include>
+        <!--<<include name="DeviceModule"></include>-->
+        <!--<<include name="SpecimenModule"></include>-->
+        <include name="CTImageModule"></include>
+        <include name="OverlayPlaneModule"></include>
+        <include name="VOILUTModule"></include>
+        <include name="SOPCommonModule"></include>
+        <include name="ImagePlaneModule" note="not in standard"></include>
+        <include name="PresentationLUTmodule" note="not in standard"></include>
+    </iod>
+    <iod name="CT" classes="EnhancedCTImageStorage">
+        <include name="PatientModule"></include>
+        <include name="GeneralStudyModule"></include>
+        <include name="PatientStudyModule"></include>
+        <include name="GeneralSeriesModule"></include>
+        <include name="CTSeriesModule"></include>
+        <include name="FrameOfReferenceModule"></include>
+        <!--<include name="SynchronizationModule"></include>-->
+        <include name="GeneralEquipmentModule"></include>
+        <include name="EnhancedGeneralEquipmentModule"></include>
+        <include name="ImagePixelModule"></include>
+        <!--<include name="EnhancedContrastBolusModule"></include>-->
+        <include name="MultiframeFunctionalGroupsModule"></include>
+        <include name="MultiframeDimensionModule"></include>
+        <!--<include name="CardiacSynchronizationModule"></include>-->
+        <!--<include name="RespiratorySynchronizationModule"></include>-->
+        <!--<include name="SupplementalPaletteColorLookupTableModule"></include>-->
+        <include name="AcquisitionContextModule"></include>
+        <!--<<include name="DeviceModule"></include>-->
+        <!--<<include name="SpecimenModule"></include>-->
+        <include name="EnhancedCTImageModule"></include>
+        <include name="SOPCommonModule"></include>
+        <!--<include name="FrameExtractionModule"></include>-->
+    </iod>
+    <iod name="DX" classes="DigitalXRayImageStorageForPresentationSOPClass,DigitalXRayImageStorageForProcessingSOPClass">
+        <include name="PatientModule"></include>
+        <include name="GeneralStudyModule"></include>
+        <include name="PatientStudyModule"></include>
+        <include name="GeneralSeriesModule"></include>
+        <include name="GeneralEquipmentModule"></include>
+        <include name="GeneralImageModule"></include>
+        <include name="ImagePixelModule"></include>
+        <include name="ImagePlaneModule"></include>
+        <include name="ContrastBolusModule"></include>
+        <include name="ModalityLUTModule"></include>
+        <include name="SOPCommonModule"></include>
+        <include name="DisplayShutterModule"></include>
+        <include name="DXSeriesModule"></include>
+        <include name="DXImageModule"></include>
+        <include name="DXPositioningModule"></include>
+        <include name="DXAnatomyImagedModule"></include>
+        <include name="DXDetectorModule"></include>
+        <include name="AcquisitionContextModule"></include>
+        <include name="VOILUTModule"></include>
+        <include name="PresentationLUTmodule"></include>
+        <include name="XRayAcquisitionDoseModule"></include>
+        <include name="XRayFiltrationModule"></include>
+        <include name="XRayCollimatorModule"></include>
+        <include name="XRayGridModule"></include>
+        <include name="OverlayPlaneModule"></include>
+    </iod>
+    <iod name="MG" classes="DigitalMammographyImageStorageForPresentationSOPClass,DigitalMammographyImageStorageForProcessingSOPClass">
+        <include name="PatientModule"></include>
+        <include name="GeneralStudyModule"></include>
+        <include name="PatientStudyModule"></include>
+        <include name="GeneralSeriesModule"></include>
+        <include name="GeneralEquipmentModule"></include>
+        <include name="GeneralImageModule"></include>
+        <include name="ImagePixelModule"></include>
+        <include name="ImagePlaneModule"></include>
+        <include name="ContrastBolusModule"></include>
+        <include name="ModalityLUTModule"></include>
+        <include name="SOPCommonModule"></include>
+        <include name="DisplayShutterModule"></include>
+        <include name="OverlayPlaneModule"></include>
+        <include name="DXSeriesModule"></include>
+        <include name="DXPositioningModule"></include>
+        <include name="DXAnatomyImagedModule"></include>
+        <include name="DXImageModule"></include>
+        <include name="DXDetectorModule"></include>
+        <include name="AcquisitionContextModule"></include>
+        <include name="VOILUTModule"></include>
+        <include name="PresentationLUTmodule"></include>
+        <include name="XRayAcquisitionDoseModule"></include>
+        <include name="XRayFiltrationModule"></include>
+        <include name="XRayCollimatorModule"></include>
+        <include name="XRayGenerationModule"></include>
+        <include name="XRayGridModule"></include>
+        <include name="MammographySeriesModule"></include>
+        <include name="MammographyImageModule"></include>
+    </iod>
+    <iod name="GSPS" classes="GrayscaleSoftcopyPresentationStateStorageSOPClass">
+        <include name="PatientModule"></include>
+        <include name="GeneralStudyModule"></include>
+        <include name="PatientStudyModule"></include>
+        <include name="GeneralSeriesModule"></include>
+        <include name="DXSeriesModule"></include>
+        <include name="CRSeriesModule"></include>
+        <include name="SOPCommonModule"></include>
+        <include name="PresentationSeriesModule"></include>
+        <include name="GeneralEquipmentModule"></include>
+        <include name="DisplayedAreaModule"></include>
+        <include name="SoftcopyPresentationLUTmodule"></include>
+        <include name="PresentationStateModule"></include>
+        <include name="DisplayShutterModule"></include>
+        <include name="OverlayPlaneModule"></include>
+        <include name="SpatialTransformationModule"></include>
+        <include name="SoftcopyVOILUTModule"></include>
+    </iod>
+    <override name="PVALUEoverride">
+        <element tag="(0028,1050)" vt="3"></element>
+        <element tag="(0028,1051)" vt="1C"></element>
+    </override>
+    <macro name="CRExtension">
+        <element tag="(0028,0300)" vt="3"></element>
+        <element tag="(0040,050A)" vt="3"></element>
+        <element tag="(0040,0550)" vt="3"></element>
+        <element tag="(0050,0004)" vt="3"></element>
+        <element tag="(3002,000D)" vt="3"></element>
+        <sequence tag="(3002,0040)" vt="3">
+        </sequence>
+    </macro>
+    <macro name="ChinaVet">
+        <element tag="(0008,1080)" vt="3"></element>
+        <element tag="(0010,2000)" vt="3"></element>
+        <element tag="(0010,2160)" vt="3"></element>
+    </macro>
+    <macro name="NonCRTagsSentInDRV4x">
+        <element tag="(0018,1160)" vt="3"></element>
+        <element tag="(0018,7050)" vt="3"></element>
+        <element tag="(0018,7052)" vt="3" dependency="(0018,7050)=..."></element>
+        <element tag="(0018,7054)" vt="3" dependency="(0018,7050)=..."></element>
+        <element tag="(0018,700A)" vt="3"></element>
+        <element tag="(0018,1190)" vt="3"></element>
+        <element tag="(0018,7001)" vt="3"></element>
+        <element tag="(0018,1166)" vt="3"></element>
+        <element tag="(0018,704C)" vt="3"></element>
+        <element tag="(0018,1147)" vt="3"></element>
+        <element tag="(0018,1149)" vt="3"></element>
+        <element tag="(0018,115E)" vt="3"></element>
+    </macro>
+    <macro name="CRPrivate">
+        <element tag="(0029,0010)" vt="3"></element>
+        <element tag="(0029,1002)" vt="3"></element>
+        <element tag="(0029,1003)" vt="3"></element>
+        <element tag="(0029,1004)" vt="3"></element>
+        <element tag="(0029,1005)" vt="3"></element>
+        <element tag="(0029,1006)" vt="3"></element>
+        <element tag="(0029,1007)" vt="3"></element>
+        <element tag="(0029,1008)" vt="3"></element>
+        <element tag="(0029,1009)" vt="3"></element>
+        <element tag="(0029,1010)" vt="3"></element>
+        <element tag="(0029,1015)" vt="3"></element>
+        <element tag="(0029,1016)" vt="3"></element>
+        <element tag="(0029,1017)" vt="3"></element>
+        <element tag="(0029,1018)" vt="3"></element>
+        <element tag="(0029,1019)" vt="3"></element>
+        <element tag="(0029,101a)" vt="3"></element>
+        <element tag="(0029,101b)" vt="3"></element>
+        <element tag="(0029,101c)" vt="3"></element>
+        <element tag="(0029,101d)" vt="3"></element>
+        <element tag="(0029,10fa)" vt="3"></element>
+        <element tag="(0029,10fb)" vt="3"></element>
+        <element tag="(0029,10fc)" vt="3"></element>
+        <element tag="(0029,10fd)" vt="3"></element>
+        <element tag="(0029,10fe)" vt="3"></element>
+        <element tag="(0029,10ff)" vt="3"></element>
+    </macro>
+</dicom>

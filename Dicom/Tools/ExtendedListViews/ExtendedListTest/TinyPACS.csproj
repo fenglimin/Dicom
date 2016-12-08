@@ -1,0 +1,259 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <PropertyGroup>
+    <ProjectType>Local</ProjectType>
+    <ProductVersion>7.0.9466</ProductVersion>
+    <SchemaVersion>1.0</SchemaVersion>
+    <ProjectGuid>{CFD0497E-947C-4DE2-8AC0-9C620B55A1E4}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ApplicationIcon>App.ico</ApplicationIcon>
+    <AssemblyKeyContainerName />
+    <AssemblyName>TinyPACS</AssemblyName>
+    <AssemblyOriginatorKeyFile />
+    <DefaultClientScript>JScript</DefaultClientScript>
+    <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
+    <DefaultTargetSchema>IE50</DefaultTargetSchema>
+    <DelaySign>false</DelaySign>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>ExtendedListTest</RootNamespace>
+    <StartupObject />
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>0.0</OldToolsVersion>
+    <TargetFrameworkProfile />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile />
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DocumentationFile />
+    <DebugSymbols>true</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <Optimize>false</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>full</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>false</Prefer32Bit>
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile />
+    <DefineConstants>TRACE</DefineConstants>
+    <DocumentationFile />
+    <DebugSymbols>false</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <Optimize>true</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>none</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\DicomToolKit\EK.Capture.Dicom.DicomToolKit.csproj">
+      <Project>{a63467bb-e824-46ae-be6e-98840716e16c}</Project>
+      <Name>EK.Capture.Dicom.DicomToolKit</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ExtendedListViews.csproj">
+      <Name>ExtendedListViews</Name>
+      <Project>{36202DE0-590A-43D4-A99D-55412CAD71C8}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <Reference Include="System">
+      <Name>System</Name>
+    </Reference>
+    <Reference Include="System.Data">
+      <Name>System.Data</Name>
+    </Reference>
+    <Reference Include="System.Drawing">
+      <Name>System.Drawing</Name>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization.Formatters.Soap" />
+    <Reference Include="System.Windows.Forms">
+      <Name>System.Windows.Forms</Name>
+    </Reference>
+    <Reference Include="System.Xml">
+      <Name>System.XML</Name>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CachedForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CachedForm.Designer.cs">
+      <DependentUpon>CachedForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CustomControl\ucDircomDir.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CustomControl\ucDircomDir.Designer.cs">
+      <DependentUpon>ucDircomDir.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CustomControl\ucTagAndImage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CustomControl\ucTagAndImage.Designer.cs">
+      <DependentUpon>ucTagAndImage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CustomControl\ucDoseReport.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CustomControl\ucDoseReport.Designer.cs">
+      <DependentUpon>ucDoseReport.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CustomControl\ucTag.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CustomControl\ucTag.Designer.cs">
+      <DependentUpon>ucTag.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ExtendedListTest.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Service\CachedDicomElements.cs" />
+    <Compile Include="Service\DicomElementsBase.cs" />
+    <Compile Include="Service\ElementsBase.cs" />
+    <Compile Include="Service\ImagePersistenceStatus.cs" />
+    <Compile Include="Service\ImageMemoryStatus.cs" />
+    <Compile Include="Service\ReceivedDicomElements.cs" />
+    <Compile Include="StorageCommitmentForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="StorageCommitmentForm.Designer.cs">
+      <DependentUpon>StorageCommitmentForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TinyPACS.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TinyPACS.Designer.cs">
+      <DependentUpon>TinyPACS.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Image\ImageLoader.cs" />
+    <Compile Include="Image\OtherImageFormats.cs" />
+    <Compile Include="Image\Utilities.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="ReadRawForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ReadRawForm.Designer.cs" />
+    <Compile Include="Service\DicomServiceWorker.cs" />
+    <Compile Include="Service\IDicomServiceWorkerUser.cs" />
+    <Compile Include="Service\ImageSource.cs" />
+    <Compile Include="ShowPicutreForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ShowPicutreForm.Designer.cs">
+      <DependentUpon>ShowPicutreForm.cs</DependentUpon>
+    </Compile>
+    <Content Include="App.ico" />
+    <None Include="Resources\Untitled2.png" />
+    <None Include="Resources\Untitled1.png" />
+    <None Include="Resources\Cache.1.ico" />
+    <None Include="Resources\Cache..ico" />
+    <None Include="Resources\Cache1.png" />
+    <None Include="Resources\Cache.png" />
+    <None Include="Resources\SaveAs.png" />
+    <None Include="Resources\Close.png" />
+    <None Include="Resources\Save.png" />
+    <None Include="Resources\Open.png" />
+    <EmbeddedResource Include="CachedForm.resx">
+      <DependentUpon>CachedForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CustomControl\ucDircomDir.resx">
+      <DependentUpon>ucDircomDir.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CustomControl\ucTagAndImage.resx">
+      <DependentUpon>ucTagAndImage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CustomControl\ucTag.resx">
+      <DependentUpon>ucTag.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReadRawForm.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ReadRawForm1.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ShowPicutreForm.resx">
+      <DependentUpon>ShowPicutreForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="app.config" />
+    <None Include="Resources\ImagePattern.bmp" />
+    <None Include="Resources\Untitled.png" />
+    <EmbeddedResource Include="CustomControl\ucDoseReport.resx">
+      <DependentUpon>ucDoseReport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ExtendedListTest.resx">
+      <DependentUpon>ExtendedListTest.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="StorageCommitmentForm.resx">
+      <DependentUpon>StorageCommitmentForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TinyPACS.resx">
+      <DependentUpon>TinyPACS.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.5.1">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.5.1 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent />
+    <PostBuildEvent />
+  </PropertyGroup>
+</Project>

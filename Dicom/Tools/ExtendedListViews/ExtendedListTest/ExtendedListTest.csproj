@@ -1,0 +1,150 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <PropertyGroup>
+    <ProjectType>Local</ProjectType>
+    <ProductVersion>7.0.9466</ProductVersion>
+    <SchemaVersion>1.0</SchemaVersion>
+    <ProjectGuid>{F4711416-DE3E-4D0F-8B1C-15A5F9CB98D3}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ApplicationIcon>App.ico</ApplicationIcon>
+    <AssemblyKeyContainerName />
+    <AssemblyName>ExtendedListTest</AssemblyName>
+    <AssemblyOriginatorKeyFile />
+    <DefaultClientScript>JScript</DefaultClientScript>
+    <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
+    <DefaultTargetSchema>IE50</DefaultTargetSchema>
+    <DelaySign>false</DelaySign>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>ExtendedListTest</RootNamespace>
+    <StartupObject />
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>0.0</OldToolsVersion>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile />
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DocumentationFile />
+    <DebugSymbols>true</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <Optimize>false</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>full</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile />
+    <DefineConstants>TRACE</DefineConstants>
+    <DocumentationFile />
+    <DebugSymbols>false</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <Optimize>true</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>none</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ExtendedListViews.csproj">
+      <Name>ExtendedListViews</Name>
+      <Project>{36202DE0-590A-43D4-A99D-55412CAD71C8}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <Reference Include="EK.Capture.Dicom.DicomToolKit">
+      <HintPath>..\..\..\DicomToolKit\bin\x64\Debug\EK.Capture.Dicom.DicomToolKit.dll</HintPath>
+    </Reference>
+    <Reference Include="Interop.Shell32">
+      <Name>Interop.Shell32</Name>
+      <HintPath>..\nerve.net\synapticeffect.forums\bin\debug\Interop.Shell32.dll</HintPath>
+    </Reference>
+    <Reference Include="OPaC.uxTheme">
+      <Name>OPaC.uxTheme</Name>
+      <HintPath>..\nerve.net\synapticeffect.forums\bin\debug\OPaC.uxTheme.dll</HintPath>
+    </Reference>
+    <Reference Include="System">
+      <Name>System</Name>
+    </Reference>
+    <Reference Include="System.Data">
+      <Name>System.Data</Name>
+    </Reference>
+    <Reference Include="System.Drawing">
+      <Name>System.Drawing</Name>
+    </Reference>
+    <Reference Include="System.Windows.Forms">
+      <Name>System.Windows.Forms</Name>
+    </Reference>
+    <Reference Include="System.Xml">
+      <Name>System.XML</Name>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ExtendedListTest.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form2.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form2.Designer.cs">
+      <DependentUpon>Form2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="ucTagAndImage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ucTagAndImage.Designer.cs">
+      <DependentUpon>ucTagAndImage.cs</DependentUpon>
+    </Compile>
+    <Content Include="App.ico" />
+    <None Include="app.config" />
+    <None Include="Resources\ImagePattern.bmp" />
+    <None Include="Resources\Untitled.png" />
+    <EmbeddedResource Include="ExtendedListTest.resx">
+      <DependentUpon>ExtendedListTest.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form2.resx">
+      <DependentUpon>Form2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ucTagAndImage.resx">
+      <DependentUpon>ucTagAndImage.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="images\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent />
+    <PostBuildEvent />
+  </PropertyGroup>
+</Project>

@@ -1,0 +1,1344 @@
+<?xml version="1.0"?>
+<!--
+Kodak DICOM Library for MIM Core Store SCU
+Author: Trac Tran
+Date: March 16, 2006
+ -->
+<dicomLibrary xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="DicomStructures.xsd">
+	<!--
+General rules to  utilize this schema in xml files:
+
+    1- "name" attribute: All names of nodes (other than elements and sequences) must be unique within the library
+
+    2- "vm" attributes may be ignored except
+  		- In override node when all elements must have default.
+  		-All privates element must have "vr" and "vm"
+  		-All new elements not yet supported by the toolkits.
+
+    3- "range" attribute:
+  		a value by itself indicates no choice. Ex: range="PR" means the PR is the only possible value.
+  		a "|" (bar) indicates choices. Ex: range="DCM|SNM3" means the value may be either DCM or SNM3
+  		a ":" (column) indicates min, max value. Ex: range="6:16" means any value from 6 up to 16 is valid.
+
+  	4- "default" attribute:
+  		- Specifies the value to be assigned to the element when the input gives none. Preferrably all elements of type 1
+  			and 2 should have a default.
+  		- All elements in an override node must have default.
+  		- note: when a default is specified, the "vr" and "vm" should be entered.
+  		- These 3 special codes may be used in default:
+  		    + "FILE=xxx": indicates that the default can be found in the part10 file named "xxx". Example: default="FILE=test.dcm" means the
+  		    element can be copied from the file of "test.dcm"
+  		    + "TAG=(xxxx,xxxx)": indicates that the default can use the same value from the tag of (xxxx,xxxx).
+  		    + "%TIME%": the current time is desired
+  		    + "%DATE%": the current date is desired
+  		    + "%DATETIME%": the current datetime is desired.
+  		    + "CHOICE=Environment? X:Y" : depending on the environment condition, the value of X (true) or Y (false) will be used.
+  		    + "%RUNTIME%": indicates that the element can be computed during runtime. To date these element are recognized:
+  		    Referenced_SOP_Class_UID, Referenced_SOP_Instance_UID, Illumination, Reflective_Ambient_Light,
+  		    Max_Density , Mim_Density, Modality, Photometric_Interpretation
+
+    5- "dependency" attribute: allways has the  form of "(tag)=..."
+  		a "(Tag)=V|V2" means equal to one of the enumerated values. Ex: "(0008,0008)=SIMULATOR,PORTAL" means the
+  			element must be included if the tag of (0008,0008) has a value of SIMULATOR or PORTAL.
+  		a "(Tag)=V:V2" means in the range between min, max. Ex: "(0008,0008)=1:4" means the element must
+  			be included if the tag of (0008,0008) has a value in the range of 1 to 4.
+  		a "(Tag)=!" indicates not found. Ex: "(0020,0011)=!" means if the tag of (0020,0011)
+  			can not be found, then we may include the element.
+  		a "(Tag)=..." indicates the tag must be found. Ex: "(0028,6100)=..." means if the tag of (0028,6100) exists
+  			in the elementList, then we can add the element.
+
+  			Special dependency for nodes and references:
+  			when a node or reference has a dependency attribute  with
+  			a  tag of "(0000,0800)" (Data SetType) it indicates an environment condition.
+  		Ex: "(0000,0800)=PVALUE" means that if the association is running in P-Value mode, then we may use this node..
+
+       - To date, these environment conditions are recognized with the tag of (0000,0800) or with the attribute of "default":
+  		PVALUE, LUMINANCE, DENSITY, RAW 	// P-Value mode, Luminance mode, Density mode, Raw mode
+  		VOILUT, NOVOILUT, 		// VOILUT is/not supported
+  		MODALITYLUT, NOMODALITYLUT,	// MODALITYLUT is/not supported
+  		GSPS, NOGSPS, 			// GSPS (association) is/not accepted
+  		SCPM, NOSCPM	// StorageCommitment (association) is/not accepted
+  		PRIVATE   // Private support is on (configuration flag)
+  		EXTENSION // Extension support is on (configuration flag)
+  		FOR PROCESSING, FOR PRESENTATION  // Presentation Intent Type.
+        OVERLAYS   // Storage Destination supports Dicom Overlay Modules(60XX,0000).
+
+    6- "macro" notes:
+  	The macro(s) are included into other higher nodes such as Sequences, Modules or ElementLists.
+  	Note that macros can not include macros. When translating the DICOM Standard, every time there is a macro within another,
+  	the included macros must be explicitely listed in the xml files.
+  	The reason for the rule of "macros can not include macros" is to avoid run-time run-away recursion. However macros can contain
+  	sequences that in turn can contain macros, therefore indirect recursion still may occurs. So a throughout check must be made to make sure
+  	this kind of recursion can not happen.
+	-->
+	<!--
+	Macros section:
+	The macros are used by other higher sets such as Sequences, Modules or ElementLists.
+	The following macros are the exact listing from the DICOM Standard without the ability to include other
+	macros. Every time the DICOM Standard's macro includes another macro, the included macros must be fully expanded.
+	-->
+	<macro name="Code_Sequence_Macro">
+		<element name="Code_Value" tag="(0008,0100)" vr="SH" type="1C"/>
+		<element name="Coding_Scheme_Designator" tag="(0008,0102)" vr="SH" type="1C" range="DCM|SNM3|SRT|LN"/>
+		<element name="Coding_Scheme_Version" tag="(0008,0103)" vr="SH" type="1C"/>
+		<element name="Code_Meaning" tag="(0008,0104)" vr="LO" type="1C"/>
+		<element name="Context_Identifier" tag="(0008,010F)" vr="CS" type="3"/>
+		<element name="Mapping_Resource" tag="(0008,0105)" vr="CS" type="3" range="DCMR|SDM"/>
+		<element name="Context_Group_Version" tag="(0008,0106)" vr="DT" type="3"/>
+		<element name="Context_Group_Extension_Flag" tag="(0008,010B)" vr="CS" type="3"/>
+		<element name="Context_Group_Local_Version" tag="(0008,0107)" vr="DT" type="3"/>
+		<element name="Context_Group_Extension_Creator_UID" tag="(0008,010D)" vr="UI" type="3"/>
+	</macro>
+	<macro name="Person_Identification_Macro">
+		<sequence name="Person_Identification_Code_Sequence" tag="(0040,1101)" type="1">
+			<item>
+				<macroRef include="Code_Sequence_Macro"/>
+			</item>
+		</sequence>
+		<element name="Person_s_Address" tag="(0040,1102)" vr="ST" type="3"/>
+		<element name="Person_s_Telephone_Numbers" tag="(0040,1103)" vr="LO" type="3"/>
+		<element name="Institution_Name" tag="(0008,0080)" vr="LO" type="3"/>
+		<element name="Institution_Address" tag="(0008,0081)" vr="ST" type="3"/>
+		<sequence name="Institution_Code_Sequence" tag="(0008,0082)" type="3">
+			<item>
+				<macroRef include="Code_Sequence_Macro"/>
+			</item>
+		</sequence>
+	</macro>
+	<macro name="Content_Item_Macro">
+		<element name="Value_Type" tag="(0040,A040)" vr="CS" type="1C" range="DATETIME|DATE|TIME|PNAME|UIDREF|TEXT|CODE|NUMERIC"/>
+		<sequence name="Concept_Name_Code_Sequence" tag="(0040,A043)" type="1C">
+			<item>
+				<macroRef include="Code_Sequence_Macro"/>
+			</item>
+		</sequence>
+		<element name="DateTime" tag="(0040,A120)" vr="DT" type="1C" dependency="(0040,A040)=DATETIME"/>
+		<element name="Date" tag="(0040,A121)" vr="DA" type="1C" dependency="(0040,A040)=DATE"/>
+		<element name="Time" tag="(0040,A122)" vr="TM" type="3" dependency="(0040,A040)=TIME"/>
+		<element name="Person_Name" tag="(0040,A123)" vr="PN" type="1C" dependency="(0040,A040)=PNAME"/>
+		<element name="UID" tag="(0040,A124)" vr="UI" type="1C" dependency="(0040,A040)=PNAME"/>
+		<element name="Text_Value" tag="(0040,A160)" vr="UT" type="1C" dependency="(0040,A040)=TEXT"/>
+		<sequence name="Concept_Code_Sequence" tag="(0040,A168)" type="1C" dependency="(0040,A040)=CODE">
+			<item>
+				<macroRef include="Code_Sequence_Macro"/>
+			</item>
+		</sequence>
+		<element name="Numeric_Value" tag="(0040,A30A)" vr="DS" type="1C" dependency="(0040,A040)=NUMERIC"/>
+		<sequence name="Measurement_Units_Code_Sequence" tag="(0040,08EA)" type="1C" dependency="(0040,A040)=NUMERIC">
+			<item>
+				<macroRef include="Code_Sequence_Macro"/>
+			</item>
+		</sequence>
+	</macro>
+	<macro name="Image_Pixel_Macro">
+		<element name="Samples_Per_Pixel" tag="(0028,0002)" vr="US" type="1"/>
+		<element name="Photometric_Interpretation" tag="(0028,0004)" vr="CS" type="1" range="MONOCHROME1|MONOCHROME2|RGB|YBR_FULL_422|YBR_FULL_420|YBR_RCT|YBR_ICT"/>
+		<element name="Rows" tag="(0028,0010)" vr="US" type="1"/>
+		<element name="Columns" tag="(0028,0011)" vr="US" type="1"/>
+		<element name="Bits_Allocated" tag="(0028,0100)" vr="US" type="1" dependency="(0028,0101)=6:16"/>
+		<element name="Bits_Stored" tag="(0028,0101)" vr="US" type="1" range="6:16"/>
+		<element name="High_Bit" tag="(0028,0102)" vr="US" type="1"/>
+		<element name="Pixel_Representation" tag="(0028,0103)" vr="US" type="1"/>
+		<element name="Pixel_Data" tag="(7FE0,0010)" vr="OW" type="1"/>
+		<element name="Planar_Configuration" tag="(0028,0006)" vr="US" type="1C" dependency="(0028,0002)=3"/>
+		<element name="Pixel_Aspect_Ratio" tag="(0028,0034)" vr="IS" type="1C"/>
+		<element name="Smallest_Image_Pixel_Value" tag="(0028,0106)" vr="US" type="3"/>
+		<element name="Largest_Image_Pixel_Value" tag="(0028,0107)" vr="US" type="3"/>
+		<element name="Red_Palette_Color_Lookup_Table_Descriptor" tag="(0028,1101)" vr="US" type="1C" dependency="(0028,0004)=RGB"/>
+		<element name="Green_Palette_Color_Lookup_Table_Descriptor" tag="(0028,1102)" vr="US" type="1C" dependency="(0028,0004)=RGB"/>
+		<element name="Blue_Palette_Color_Lookup_Table_Descriptor" tag="(0028,1103)" vr="US" type="1C" dependency="(0028,0004)=RGB"/>
+		<element name="Red_Palette_Color_Lookup_Table_Data" tag="(0028,1201)" vr="OW" type="1C" dependency="(0028,0004)=RGB"/>
+		<element name="Green_Palette_Color_Lookup_Table_Data" tag="(0028,1202)" vr="OW" type="1C" dependency="(0028,0004)=RGB"/>
+		<element name="Blue_Palette_Color_Lookup_Table_Data" tag="(0028,1203)" vr="OW" type="1C" dependency="(0028,0004)=RGB"/>
+	</macro>
+	<macro name="Referenced_Instance_UID">
+		<element name="Referenced_SOP_Class_UID" tag="(0008,1150)" vr="UI" type="1C"/>
+		<element name="Referenced_SOP_Instance_UID" tag="(0008,1155)" vr="UI" type="1C"/>
+	</macro>
+	<macro name="General_Anatomy_Mandatory_Macro">
+		<sequence name="Anatomic_Region_Sequence" tag="(0008,2218)" type="1">
+			<item>
+				<macroRef include="Code_Sequence_Macro"/>
+				<sequence name="Anatomic_Region_Modifier_Sequence" tag="(0008,2220)" type="3">
+					<item>
+						<macroRef include="Code_Sequence_Macro"/>
+					</item>
+				</sequence>
+			</item>
+		</sequence>
+		<sequence name="Primary_Anatomic_Structure_Sequence" tag="(0008,2228)" type="3">
+			<item>
+				<macroRef include="Code_Sequence_Macro"/>
+				<sequence name="Primary_Anatomic_Structure_Modifier_Sequence" tag="(0008,2230)" type="3">
+					<item>
+						<macroRef include="Code_Sequence_Macro"/>
+					</item>
+				</sequence>
+			</item>
+		</sequence>
+	</macro>
+	<macro name="Exposure_Index_Macro">
+		<element name="Exposure_Index" tag="(0018,6EE1)" vr="DS" type="3"/>
+		<element name="Target_Exposure_Index" tag="(0018,6EE2)" vr="DS" type="3"/>
+		<element name="Deviation_Index" tag="(0018,6EE3)" vr="DS" type="3"/>
+	</macro>		
+	<!--
+	Modules section:
+	This section lists all the modules used by this library. These modules are
+	the exact listing from the DICOM Standard.
+	-->
+	<!--
+	The following modules are for general usage:
+	-->
+	<module name="Patient_Module">
+		<element name="Patient_s_Name" tag="(0010,0010)" vr="PN" type="2" default="NONAME"/>
+		<element name="Patient_ID" tag="(0010,0020)" vr="LO" type="2"/>
+		<element name="Patient_s_Birth_Date" tag="(0010,0030)" vr="DA" type="2"/>
+		<element name="Patient_s_Sex" tag="(0010,0040)" vr="CS" type="2" range="M|F|O" default="O"/>
+		<element name="Issuer_of_Patient_ID" tag="(0010,0021)" vr="LO" type="3"/>
+		<sequence name="Referenced_Patient_Sequence" tag="(0008,1120)" type="3">
+			<item>
+				<macroRef include="Referenced_Instance_UID"/>
+			</item>
+		</sequence>
+		<element name="Patient_s_Birth_Time" tag="(0010,0032)" vr="TM" type="3"/>
+		<element name="Other_Patient_IDs" tag="(0010,1000)" vr="LO" type="3"/>
+		<element name="Other_Patient_Names" tag="(0010,1001)" vr="PN" type="3"/>
+		<element name="Ethnic_Group" tag="(0010,2160)" vr="SH" type="3"/>
+		<element name="Patient_Comments" tag="(0010,4000)" vr="LT" type="3"/>
+	</module>
+	<module name="General_Study_Module">
+		<element name="Study_Instance_UID" tag="(0020,000D)" vr="UI" type="1"/>
+		<element name="Study_Date" tag="(0008,0020)" vr="DA" type="2"/>
+		<element name="Study_Time" tag="(0008,0030)" vr="TM" type="2"/>
+		<element name="Referring_Physician_s_Name" tag="(0008,0090)" vr="PN" type="2"/>
+		<sequence name="Referring_Physician_Identification_Sequence" tag="(0008,0096)" type="3">
+			<item>
+				<macroRef include="Person_Identification_Macro"/>
+			</item>
+		</sequence>
+		<element name="Study_ID" tag="(0020,0010)" vr="SH" type="2"/>
+		<element name="Accession_Number" tag="(0008,0050)" vr="SH" type="2"/>
+		<element name="Study_Description" tag="(0008,1030)" vr="LO" type="2" default=""/>
+		<element name="Physician_s_of_Record" tag="(0008,1048)" vr="PN" type="3"/>
+		<sequence name="Physician_s_of_Record_Identification_Sequence" tag="(0008,1049)" type="3">
+			<item>
+				<macroRef include="Person_Identification_Macro"/>
+			</item>
+		</sequence>
+		<element name="Name_of_Physician_s_Reading_Study" tag="(0008,1060)" vr="PN" type="3"/>
+		<sequence name="Physician_s_Reading_Study_Identification_Sequence" tag="(0008,1062)" type="3">
+			<item>
+				<macroRef include="Person_Identification_Macro"/>
+			</item>
+		</sequence>
+		<sequence name="Referenced_Study_Sequence" tag="(0008,1110)" type="3">
+			<item>
+				<macroRef include="Referenced_Instance_UID"/>
+			</item>
+		</sequence>
+		<sequence name="Procedure_Code_Sequence" tag="(0008,1032)" type="3">
+			<item>
+				<macroRef include="Code_Sequence_Macro"/>
+			</item>
+		</sequence>
+	</module>
+	<module name="Patient_Study_Module">
+		<element name="Admitting_Diagnoses_Description" tag="(0008,1080)" vr="LO" type="3"/>
+		<sequence name="Admitting_Diagnoses_Code_Sequence" tag="(0008,1084)" type="3">
+			<item>
+				<macroRef include="Code_Sequence_Macro"/>
+			</item>
+		</sequence>
+		<element name="Patient_s_Age" tag="(0010,1010)" vr="AS" type="3"/>
+		<element name="Patient_s_Size" tag="(0010,1020)" vr="DS" type="3"/>
+		<element name="Patient_s_Weight" tag="(0010,1030)" vr="DS" type="3"/>
+		<element name="Occupation" tag="(0010,2180)" vr="SH" type="3"/>
+		<element name="Additional_Patient_History" tag="(0010,21B0)" vr="LT" type="3"/>
+	</module>
+	<module name="General_Series_Module">
+		<element name="Modality" tag="(0008,0060)" vr="CS" type="1"/>
+		<element name="Series_Instance_UID" tag="(0020,000E)" vr="UI" type="1"/>
+		<element name="Series_Number" tag="(0020,0011)" type="2" vr="IS" vm="1" default="1"/>
+		<element name="Laterality" tag="(0020,0060)" vr="CS" type="2C"/>
+		<element name="Series_Date" tag="(0008,0021)" vr="DA" type="3"/>
+		<element name="Series_Time" tag="(0008,0031)" vr="TM" type="3"/>
+		<element name="Performing_Physician_s_Name" tag="(0008,1050)" vr="PN" type="3"/>
+		<sequence name="Performing_Physician_Identification_Sequence" tag="(0008,1052)" type="3">
+			<item>
+				<macroRef include="Person_Identification_Macro"/>
+			</item>
+		</sequence>
+		<element name="Protocol_Name" tag="(0018,1030)" vr="LO" type="3"/>
+		<element name="Series_Description" tag="(0008,103E)" vr="LO" type="3"/>
+		<element name="Operators_Name" tag="(0008,1070)" vr="PN" type="3"/>
+		<sequence name="Operator_Identification_Sequence" tag="(0008,1072)" type="3">
+			<item>
+				<macroRef include="Person_Identification_Macro"/>
+			</item>
+		</sequence>
+		<sequence name="Referenced_Performed_Procedure_Step_Sequence" tag="(0008,1111)" type="3">
+			<item>
+				<macroRef include="Referenced_Instance_UID"/>
+			</item>
+		</sequence>
+		<sequence name="Related_Series_Sequence" tag="(0008,1250)" type="3">
+			<item>
+				<element name="Study_Instance_UID" tag="(0020,000D)" vr="UI" type="1"/>
+				<element name="Series_Instance_UID" tag="(0020,000E)" vr="UI" type="1"/>
+				<sequence name="Purpose_of_Reference_Code_Sequence" tag="(0040,A170)" type="2">
+					<item>
+						<macroRef include="Code_Sequence_Macro"/>
+					</item>
+				</sequence>
+			</item>
+		</sequence>
+		<element name="Body_Part_Examined" tag="(0018,0015)" vr="CS" type="3"/>
+		<element name="Patient_Position" tag="(0018,5100)" vr="CS" type="2C"/>
+		<element name="Smallest_Pixel_Value_in_Series" tag="(0028,0108)" vr="US" type="3"/>
+		<element name="Largest_Pixel_Value_in_Series" tag="(0028,0109)" vr="US" type="3"/>
+		<sequence name="Request_Attributes_Sequence" tag="(0040,0275)" type="3">
+			<item>
+				<element name="Requested_Procedure_ID" tag="(0040,1001)" vr="SH" type="1C"/>
+				<element name="Reason_for_the_Requested_Procedure" tag="(0040,1002)" vr="LO" type="3"/>
+				<sequence name="Reason_for_Requested_Procedure_Code_Sequence" tag="(0040,100A)" type="3">
+					<item>
+						<macroRef include="Code_Sequence_Macro"/>
+					</item>
+				</sequence>
+				<element name="Scheduled_Procedure_Step_ID" tag="(0040,0009)" vr="SH" type="1C"/>
+				<element name="Scheduled_Procedure_Step_Description" tag="(0040,0007)" vr="LO" type="3"/>
+				<sequence name="Scheduled_Protocol_Code_Sequence" tag="(0040,0008)" type="3">
+					<item>
+						<macroRef include="Code_Sequence_Macro"/>
+						<sequence name="Protocol_Context_Sequence" tag="(0040,0440)" type="3">
+							<item>
+								<macroRef include="Content_Item_Macro"/>
+							</item>
+						</sequence>
+						<sequence name="Content_Item_Modifier_Sequence" tag="(0040,0441)" type="3">
+							<item>
+								<macroRef include="Content_Item_Macro"/>
+							</item>
+						</sequence>
+					</item>
+				</sequence>
+			</item>
+		</sequence>
+		<element name="Performed_Procedure_Step_ID" tag="(0040,0253)" vr="SH" type="3"/>
+		<element name="Performed_Procedure_Step_Start_Date" tag="(0040,0244)" vr="DA" type="3"/>
+		<element name="Performed_Procedure_Step_Start_Time" tag="(0040,0245)" vr="TM" type="3"/>
+		<element name="Performed_Procedure_Step_Description" tag="(0040,0254)" vr="LO" type="3"/>
+		<sequence name="Performed_Protocol_Code_Sequence" tag="(0040,0260)" type="3">
+			<item>
+				<macroRef include="Code_Sequence_Macro"/>
+				<sequence name="Protocol_Context_Sequence" tag="(0040,0440)" type="3">
+					<item>
+						<macroRef include="Content_Item_Macro"/>
+					</item>
+				</sequence>
+				<sequence name="Content_Item_Modifier_Sequence" tag="(0040,0441)" type="3">
+					<item>
+						<macroRef include="Content_Item_Macro"/>
+					</item>
+				</sequence>
+			</item>
+		</sequence>
+		<element name="Comments_on_the_Performed_Procedure_Step" tag="(0040,0280)" vr="ST" type="3"/>
+	</module>
+	<module name="General_Equipment_Module">
+		<element name="Manufacturer" tag="(0008,0070)" vr="LO" type="2"/>
+		<element name="Institution_Name" tag="(0008,0080)" vr="LO" type="3"/>
+		<element name="Institution_Address" tag="(0008,0081)" vr="ST" type="3"/>
+		<element name="Station_Name" tag="(0008,1010)" vr="SH" type="3" default="%RUNTIME%"/>
+		<element name="Institutional_Department_Name" tag="(0008,1040)" vr="LO" type="3"/>
+		<element name="Manufacturer_s_Model_Name" tag="(0008,1090)" vr="LO" type="3"/>
+		<element name="Device_Serial_Number" tag="(0018,1000)" vr="LO" type="3"/>
+		<element name="Gantry_ID" tag="(0018,1008)" vr="LO" type="3"/>
+		<element name="Software_Version_s_" tag="(0018,1020)" vr="LO" type="3"/>
+		<element name="Spatial_Resolution" tag="(0018,1050)" vr="DS" type="3"/>
+		<element name="Date_of_Last_Calibration" tag="(0018,1200)" vr="DA" type="3"/>
+		<element name="Time_of_Last_Calibration" tag="(0018,1201)" vr="TM" type="3"/>
+		<element name="Pixel_Padding_Value" tag="(0028,0120)" vr="US" type="3"/>
+		<element name="Pixel_Padding_Range_Limit" tag="(0028,0121)" vr="US" type="1C" dependency="0028,0120)=..."/>
+	</module>
+	<module name="VOI_LUT_Module">
+		<sequence name="VOI_LUT_Sequence" tag="(0028,3010)" type="3">
+			<item>
+				<element name="LUT_Descriptor" tag="(0028,3002)" vr="US" type="1C"/>
+				<element name="LUT_Explanation" tag="(0028,3003)" vr="LO" type="3"/>
+				<element name="LUT_Data" tag="(0028,3006)" vr="US" type="1C"/>
+			</item>
+		</sequence>
+		<element name="Window_Center" tag="(0028,1050)" type="3"/>
+		<element name="Window_Width" tag="(0028,1051)" type="1C"/>
+		<element name="Window_Center_Width_Explanation" tag="(0028,1055)" type="3"/>
+	</module>
+	<module name="Modality_LUT_Module">
+		<sequence name="Modality_LUT_Sequence" tag="(0028,3000)" type="1C">
+			<item>
+				<element name="LUT_Descriptor" tag="(0028,3002)" vr="US" type="1C"/>
+				<element name="LUT_Explanation" tag="(0028,3003)" vr="LO" type="3"/>
+				<element name="Modality_LUT_Type" tag="(0028,3004)" vr="LO" type="1C"/>
+				<element name="LUT_Data" tag="(0028,3006)" vr="US" type="1C"/>
+			</item>
+		</sequence>
+		<element name="Rescale_Intercept" tag="(0028,1052)" vr="DS" type="1C"/>
+		<element name="Rescale_Slope" tag="(0028,1053)" vr="DS" type="1C"/>
+		<element name="Rescale_Type" tag="(0028,1054)" vr="LO" type="1C"/>
+	</module>
+	<module name="SOP_Common_Module">
+		<element name="SOP_Class_UID" tag="(0008,0016)" vr="UI" type="1"/>
+		<element name="SOP_Instance_UID" tag="(0008,0018)" vr="UI" type="1"/>
+		<element name="Specific_Character_Set" tag="(0008,0005)" vr="CS" type="1C"/>
+		<element name="Instance_Creation_Date" tag="(0008,0012)" vr="DA" type="3"/>
+		<element name="Instance_Creation_Time" tag="(0008,0013)" vr="TM" type="3"/>
+		<element name="Instance_Creation_UID" tag="(0008,0014)" vr="UI" type="3"/>
+		<element name="Related_General_SOP_Class_UID" tag="(0008,001A)" vr="UI" type="3"/>
+		<element name="Original_Specialized_SOP_Class_UID" tag="(0008,001B)" vr="UI" type="3"/>
+		<sequence name="Coding_Scheme_Identification_Sequence" tag="(0008,0110)" type="3">
+			<item>
+				<element name="Coding_Scheme_Designator" tag="(0008,0102)" vr="SH" type="1"/>
+				<element name="Coding_Scheme_Registry" tag="(0008,0112)" vr="LO" type="1C"/>
+				<element name="Coding_Scheme_UID" tag="(0008,010C)" vr="UI" type="1C"/>
+				<element name="Coding_Scheme_ExternalID" tag="(0008,0114)" vr="ST" type="2C"/>
+				<element name="Coding_Scheme_Name" tag="(0008,0115)" vr="ST" type="3"/>
+				<element name="Coding_Scheme_Version" tag="(0008,0103)" vr="SH" type="3"/>
+				<element name="Responsible_Organization" tag="(0008,0116)" vr="ST" type="3"/>
+			</item>
+		</sequence>
+		<element name="Timezone_Offset_From_UTC" tag="(0008,0201)" vr="SH" type="3"/>
+		<sequence name="Contributing_Equipment_Sequence" tag="(0018,A001)" type="3">
+			<item>
+				<sequence name="Purpose_of_Reference_Code_Sequence" tag="(0040,A170)" type="1">
+					<item>
+						<macroRef include="Code_Sequence_Macro"/>
+					</item>
+				</sequence>
+				<element name="Manufacturer" tag="(0008,0070)" vr="LO" type="1"/>
+				<element name="Institution_Name" tag="(0008,0080)" vr="LO" type="3"/>
+				<element name="Institution_Address" tag="(0008,0081)" vr="ST" type="3"/>
+				<element name="Station_Name" tag="(0008,1010)" vr="SH" type="3"/>
+				<element name="Institutional_Department_Name" tag="(0008,1040)" vr="LO" type="3"/>
+				<element name="Manufacturer_s_Model_Name" tag="(0008,1090)" vr="LO" type="3"/>
+				<element name="Device_Serial_Number" tag="(0018,1000)" vr="LO" type="3"/>
+				<element name="Software_Version_s_" tag="(0018,1020)" vr="LO" type="3"/>
+				<element name="Spatial_Resolution" tag="(0018,1050)" vr="DS" type="3"/>
+				<element name="Date_of_Last_Calibration" tag="(0018,1200)" vr="DA" type="3"/>
+				<element name="Time_of_Last_Calibration" tag="(0018,1201)" vr="TM" type="3"/>
+				<element name="Contribution_DateTime" tag="(0018,A002)" vr="DT" type="3"/>
+				<element name="Contribution_Description" tag="(0018,A003)" vr="ST" type="3"/>
+			</item>
+		</sequence>
+		<element name="Instance_Number" tag="(0020,0013)" vr="IS" type="3"/>
+		<element name="SOP_Instance_Status" tag="(0100,0410)" vr="CS" type="3"/>
+		<element name="SOP_Authorization_Date_and_Time" tag="(0100,0420)" vr="DT" type="3"/>
+		<element name="SOP_Authorization_Comment" tag="(0100,0424)" vr="LT" type="3"/>
+		<element name="Authorization_Equipment_Certification_Number" tag="(0100,0426)" vr="LO" type="3"/>
+		<sequence name="MAC_Parameters_Sequence" tag="(4FFE,0001)" type="3">
+			<item>
+				<element name="MAC_ID_Number" tag="(0400,0005)" vr="US" type="1"/>
+				<element name="MAC_Calculation_Transfer_Syntax_UID" tag="(0400,0010)" vr="UI" type="1"/>
+				<element name="MAC_Algorithm" tag="(0400,0015)" vr="CS" type="1"/>
+				<element name="Data_Elements_Signed" tag="(0400,0020)" vr="AT" type="1"/>
+			</item>
+		</sequence>
+		<sequence name="Digital_Signatures_Sequence" tag="(FFFA,FFFA)" type="3">
+			<item>
+				<element name="MAC_ID_Number" tag="(0400,0005)" vr="US" type="1"/>
+				<element name="Digital_Signature_UID" tag="(0400,0100)" vr="UI" type="1"/>
+				<element name="Digital_Signature_Date_Time" tag="(0400,0105)" vr="DT" type="1"/>
+				<element name="Certificate_Type" tag="(0400,0110)" vr="CS" type="1"/>
+				<element name="Certificate_of_Signer" tag="(0400,0115)" vr="OB" type="1"/>
+				<element name="Signature" tag="(0400,0120)" vr="OB" type="1"/>
+				<element name="Certified_Timestamp_Type" tag="(0400,0305)" vr="CS" type="1C"/>
+				<element name="Certified_Timestamp" tag="(0400,0310)" vr="OB" type="3"/>
+			</item>
+		</sequence>
+		<sequence name="Encrypted_Attributes_Sequence" tag="(0400,0500)" type="1C">
+			<item>
+				<element name="Encrypted_Content_Transfer_Syntax_UID" tag="(0400,0510)" vr="UI" type="1"/>
+				<element name="Encrypted_Content" tag="(0400,0520)" vr="OB" type="1"/>
+			</item>
+		</sequence>
+	</module>
+	<module name="General_Image_Module">
+        <element name="Plate_ID" tag="(0018,1004)" vr="LO" type="3"/>
+        <element name="Instance_Number" tag="(0020,0013)" vr="IS" type="2" default="%RUNTIME%"/>
+		<element name="Patient_Orientation" tag="(0020,0020)" vr="CS" type="2C" dependency="(0020,0037)=!"/>
+		<element name="Content_Date" tag="(0008,0023)" vr="DA" type="2C"/>
+		<element name="Content_Time" tag="(0008,0033)" vr="TM" type="2C"/>
+		<element name="Image_Type" tag="(0008,0008)" vr="CS" type="3"/>
+		<element name="Acquisition_Number" tag="(0020,0012)" vr="IS" type="3"/>
+		<element name="Acquisition_Date" tag="(0008,0022)" vr="DA" type="3"/>
+		<element name="Acquisition_Time" tag="(0008,0032)" vr="TM" type="3"/>
+		<element name="Acquisition_Datetime" tag="(0008,002A)" vr="DT" type="3"/>
+		<sequence name="Referenced_Image_Sequence" tag="(0008,1140)" type="3">
+			<item>
+				<element name="Referenced_SOP_Class_UID" tag="(0008,1150)" vr="UI" type="1C" default="%RUNTIME%"/>
+				<element name="Referenced_SOP_Instance_UID" tag="(0008,1155)" vr="UI" type="1C" default="%RUNTIME%"/>
+				<element name="Referenced_Frame_Number" tag="(0008,1160)" vr="IS" type="3"/>
+				<sequence name="Purpose_of_Reference_Code_Sequence" tag="(0040,A170)" type="3">
+					<item>
+						<macroRef include="Code_Sequence_Macro"/>
+					</item>
+				</sequence>
+			</item>
+		</sequence>
+		<element name="Derivation_Description" tag="(0008,2111)" vr="ST" type="3"/>
+		<sequence name="Derivation_Code_Sequence" tag="(0008,9215)" type="3">
+			<item>
+				<macroRef include="Code_Sequence_Macro"/>
+			</item>
+		</sequence>
+		<sequence name="Source_Image_Sequence" tag="(0008,2112)" type="3">
+			<item>
+				<macroRef include="Referenced_Instance_UID"/>
+				<element name="Referenced_Frame_Number" tag="(0008,1160)" vr="IS" type="3"/>
+				<sequence name="Purpose_of_Reference_Code_Sequence" tag="(0040,A170)" type="3">
+					<item>
+						<macroRef include="Code_Sequence_Macro"/>
+					</item>
+				</sequence>
+				<element name="Spatial_Locations_Preserved" tag="(0028,135A)" vr="CS" type="3"/>
+				<element name="Patient_Orientation" tag="(0020,0020)" vr="CS" type="1C" dependency="(0028,135A)=REORIENTED_ONLY"/>
+			</item>
+		</sequence>
+		<sequence name="Referenced_Waveform_Sequence" tag="(0008,113A)" type="3">
+			<item>
+				<element name="Study_Instance_UID" tag="(0020,000D)" vr="UI" type="1"/>
+				<sequence name="Referenced_Series_Sequence" tag="(0008,1115)" type="1">
+					<item>
+						<element name="Series_Instance_UID" tag="(0020,000E)" vr="UI" type="1"/>
+						<element name="Retrieve_AE_Title" tag="(0008,0054)" vr="AE" type="3"/>
+						<element name="Storage_Media_File_set_ID" tag="(0088,0130)" vr="SH" type="3"/>
+						<element name="Storage_Media_File_set_UID" tag="(0088,0140)" vr="UI" type="3"/>
+						<sequence name="Referenced_SOP_Sequence" tag="(0008,1199)" type="1">
+							<item>
+								<macroRef include="Referenced_Instance_UID"/>
+							</item>
+						</sequence>
+					</item>
+				</sequence>
+				<sequence name="Purpose_of_Reference_Code_Sequence" tag="(0040,A170)" type="3">
+					<item>
+						<macroRef include="Code_Sequence_Macro"/>
+					</item>
+				</sequence>
+			</item>
+		</sequence>
+		<element name="Images_in_Acquisition" tag="(0020,1002)" vr="IS" type="3"/>
+		<element name="Image_Comments" tag="(0020,4000)" vr="LT" type="3"/>
+		<element name="Quality_Control_Image" tag="(0028,0300)" vr="CS" type="3"/>
+		<element name="Burned_In_Annotation" tag="(0028,0301)" vr="CS" type="3"/>
+		<element name="Lossy_Image_Compression" tag="(0028,2110)" vr="CS" type="3"/>
+		<element name="Lossy_Image_Compression_Ratio" tag="(0028,2112)" vr="DS" type="3"/>
+		<element name="Lossy_Image_Compression_Method" tag="(0028,2114)" vr="CS" type="3"/>
+		<sequence name="Icon_Image_Sequence" tag="(0088,0200)" type="3">
+			<item>
+				<macroRef include="Image_Pixel_Macro"/>
+			</item>
+		</sequence>
+	</module>
+	<module name="Presentation_LUT_module">
+		<element name="Presentation_LUT_Shape" tag="(2050,0020)" vr="CS" type="2" range="IDENTITY|INVERSE" default="IDENTITY"/>
+	</module>
+	<module name="Image_Pixel_Module">
+		<macroRef include="Image_Pixel_Macro"/>
+	</module>
+	<module name="Image_Plane_Module">
+		<element name="Pixel_Spacing" tag="(0028,0030)" type="2" vr="DS" vm="2" default="TAG=(0018,1164)"/>
+	</module>
+	<module name="Contrast_Bolus_Module">
+		<element name="Contrast_Bolus_Agent" tag="(0018,0010)" vr="LO" type="2"/>
+		<sequence name="Contrast_Bolus_Agent_Sequence" tag="(0018,0012)" type="3">
+			<item>
+				<macroRef include="Code_Sequence_Macro"/>
+			</item>
+		</sequence>
+		<element name="Contrast_Bolus_Route " tag="(0018,1040)" vr="LO" type="3"/>
+		<sequence name="Contrast_Bolus_Administration_Route_Sequence" tag="(0018,0014)" type="3">
+			<item>
+				<macroRef include="Code_Sequence_Macro"/>
+			</item>
+		</sequence>
+		<sequence name="Additional_Drug_Sequence" tag="(0018,002a)" type="3">
+			<item>
+				<macroRef include="Code_Sequence_Macro"/>
+			</item>
+		</sequence>
+		<element name="Contrast_Bolus_Volume" tag="(0018,1041)" vr="DS" type="3"/>
+		<element name="Contrast_Bolus_Start_Time" tag="(0018,1042)" vr="TM" type="3"/>
+		<element name="Contrast_Bolus_Stop_Time" tag="(0018,1043)" vr="TM" type="3"/>
+		<element name="Contrast_Bolus_Total_Dose" tag="(0018,1044)" vr="DS" type="3"/>
+	</module>
+	<!--
+	The following modules are for Secondary Capture IOD:
+ 	-->
+	<module name="SC_Equipment_Module">
+		<element name="Conversion_Type" tag="(0008,0064)" vr="CS" type="2" default="DF"/>
+		<element name="Modality" tag="(0008,0060)" vr="CS" type="3"/><element name="Secondary_Capture_Device_ID " tag="(0018,1010)" vr="LO" type="3"/>
+		<element name="Secondary_Capture_Device_Manufacturer" tag="((0018,1016)" vr="LO" type="3"/><element name="Secondary_Capture_Device_Manufacturer_s_Model_Name " tag="(0018,1018)" vr="LO" type="3"/>
+		<element name="Secondary_Capture_Device_Software_Version_s_" tag="(0018,1019)" vr="LO" type="3"/><element name="Video_Image_Format_Acquired" tag="(0018,1022)" vr="SH" type="3"/>
+		
+		
+		
+		<element name="Digital_Image_Format_Acquired" tag="(0018,1023)" vr="LO" type="3"/>
+	</module>
+	<module name="SC_Image_Module">
+		
+		<element name="Date_of_Secondary_Capture" tag="(0018,1012)" vr="DA" type="3"/><element name="Time_of_Secondary_Capture" tag="(0018,1014)" vr="TM" type="3"/>
+	</module>
+	<!--
+	The following modules are for CR IOD:
+ 	-->
+	<module name="CR_Series_Module">
+		<element name="Body_Part_Examined" tag="(0018,0015)" vr="CS" type="2"/>
+		<element name="View_Position" tag="(0018,5101)" vr="CS" type="2"/><element name="Filter_Type" tag="(0018,1160)" vr="SH" type="3"/>
+		<element name="Collimator_grid_Name" tag="(0018,1180)" vr="SH" type="3"/><element name="Focal_Spot_s_" tag="(0018,1190)" vr="DS" type="3"/>
+		<element name="Plate_Type" tag="(0018,1260)" vr="SH" type="3"/>
+		
+		
+		<element name="Phosphor_Type" tag="(0018,1261)" vr="LO" type="3"/>
+	</module>
+	<module name="CR_Image_Module">
+		<element name="Photometric_Interpretation" tag="(0028,0004)" vr="CS" type="1" default="%RUNTIME%"/>
+		<element name="KVP" tag="(0018,0060)" vr="DS" type="3"/><element name="Plate_ID" tag="(0018,1004)" vr="LO" type="3"/>
+		<element name="Distance_Source_to_Detector" tag="(0018,1110)" vr="DS" type="3"/><element name="Distance_Source_to_Patient" tag="(0018,1111)" vr="DS" type="3"/>
+		<element name="Exposure_Time" tag="(0018,1150)" vr="IS" type="3"/><element name="X_ray_Tube_Current" tag="(0018,1151)" vr="IS" type="3"/>
+		<element name="Exposure" tag="(0018,1152)" vr="IS" type="3"/>
+		
+		
+		
+		<element name="Exposure_in_uAs" tag="(0018,1153)" vr="IS" type="3"/>
+        	<element name="Imager_Pixel_Spacing" tag="(0018,1164)" vr="DS" vm="2" type="2" default="TAG=(0028,0030)"/>
+		<element name="Generator_Power" tag="(0018,1170)" vr="IS" type="3"/>
+		<element name="Acquisition_Device_Processing_Description" tag="(0018,1400)" vr="LO" type="3"/>
+		<element name="Acquisition_Device_Processing_Code" tag="(0018,1401)" vr="LO" type="3"/>
+		<element name="Cassette_Orientation" tag="(0018,1402)" vr="CS" type="3"/>
+		<element name="Cassette_Size" tag="(0018,1403)" vr="CS" type="3"/>
+		<element name="Exposures_on_Plate" tag="(0018,1404)" vr="US" type="3"/>
+		<element name="Relative_X_ray_Exposure" tag="(0018,1405)" vr="IS" type="3"/>
+		<element name="Sensitivity" tag="(0018,6000)" vr="DS" type="3"/>
+		<macroRef include="Exposure_Index_Macro"/>
+		<element name="Window_Center" tag="(0028,1050)" vr="DS" type="1C"/>
+		<element name="Window_Width" tag="(0028,1051)" vr="DS" type="1C"/>
+		<sequence name="Anatomic_Region_Sequence" tag="(0008,2218)" type="3">
+			<item>
+				<macroRef include="Code_Sequence_Macro"/>
+				<sequence name="Anatomic_Region_Modifier_Sequence" tag="(0008,2220)" type="3">
+					<item>
+						<macroRef include="Code_Sequence_Macro"/>
+					</item>
+				</sequence>
+			</item>
+		</sequence>
+		<sequence name="Primary_Anatomic_Structure_Sequence" tag="(0008,2228)" type="3">
+			<item>
+				<macroRef include="Code_Sequence_Macro"/>
+				<sequence name="Primary_Anatomic_Structure_Modifier_Sequence" tag="(0008,2230)" type="3">
+					<item>
+						<macroRef include="Code_Sequence_Macro"/>
+					</item>
+				</sequence>
+			</item>
+		</sequence>
+	</module>
+	<!--
+	The following modules are for DX IOD:
+ 	-->
+	<module name="DX_Positioning_Module">
+		<sequence name="Projection_Eponymous_Name_Code_Sequence" tag="(0018,5104)" type="3">
+			<item>
+				<macroRef include="Code_Sequence_Macro"/>
+			</item>
+		</sequence>
+		<element name="Patient_Position" tag="(0018,5100)" vr="CS" type="3"/>
+		<element name="View_Position" tag="(0018,5101)" vr="CS" type="3"/>
+		<sequence name="View_Code_Sequence" tag="(0054,0220)" type="3">
+			<item>
+				<macroRef include="Code_Sequence_Macro"/>
+				<sequence name="View_Modifier_Code_Sequence" tag="(0054,0222)" type="3">
+					<item>
+						<macroRef include="Code_Sequence_Macro"/>
+					</item>
+				</sequence>
+			</item>
+		</sequence>
+		<sequence name="Patient_Orientation_Code_Sequence" tag="(0054,0410)" type="3">
+			<item>
+				<macroRef include="Code_Sequence_Macro"/>
+				<sequence name="Patient_Orientation_Modifier_Code_Sequence" tag="(0054,0412)" type="3">
+					<item>
+						<macroRef include="Code_Sequence_Macro"/>
+					</item>
+				</sequence>
+			</item>
+		</sequence>
+		<sequence name="Patient_Gantry_Relationship_Code_Sequence" tag="(0054,0414)" type="3">
+			<item>
+				<macroRef include="Code_Sequence_Macro"/>
+			</item>
+		</sequence>
+		<element name="Distance_Source_to_Patient" tag="(0018,1111)" vr="DS" type="3"/>
+		<element name="Distance_Source_to_Detector" tag="(0018,1110)" vr="DS" type="3"/>
+		<element name="Estimated_Radiographic_Magnification_Factor" tag="(0018,1114)" vr="DS" type="3"/>
+		<element name="Positioner_Type" tag="(0018,1508)" vr="CS" type="2" range="CARM|COLUMN|MAMMOGRAPHIC|PANORAMIC|CEPHALOSTAT|RIGID|NONE" default="NONE"/>
+		<element name="Positioner_Primary_Angle" tag="(0018,1510)" vr="DS" type="3"/>
+		<element name="Positioner_Secondary_Angle" tag="(0018,1511)" vr="DS" type="3"/>
+		<element name="Detector_Primary_Angle" tag="(0018,1530)" vr="DS" type="3"/>
+		<element name="Detector_Secondary_Angle" tag="(0018,1531)" vr="DS" type="3"/>
+		<element name="Column_Angulation" tag="(0018,1450)" vr="DS" type="3" dependency="(0018,1508)=COLUMN"/>
+		<element name="Table_Type" tag="(0018,113A)" vr="CS" type="3" range="FIXED|TILTING|NONE"/>
+		<element name="Table_Angle" tag="(0018,1138)" vr="DS" type="3" dependency="(0018,113A)=TILTING"/>
+		<element name="Body_Part_Thickness" tag="(0018,11A0)" vr="DS" type="3"/>
+		<element name="Compression_Force" tag="(0018,11A2)" vr="DS" type="3"/>
+	</module>
+	<module name="DX_Series_Module"><element name="Modality" tag="(0008,0060)" type="1" vr="CS" vm="1"/>
+		<sequence name="Referenced_Performed_Procedure_Step_Sequence" tag="(0008,1111)" type="1C">
+			<item>
+				<macroRef include="Referenced_Instance_UID"/>
+			</item>
+		</sequence>
+		<element name="Presentation_Intent_Type" tag="(0008,0068)" type="1" vr="CS" vm="1" range="FOR PRESENTATION|FOR PROCESSING" default="CHOICE=RAW?FOR PROCESSING:FOR PRESENTATION"/>
+	</module>
+	<module name="DX_Anatomy_Imaged_Module"><element name="Image_Laterality " tag="(0020,0062)" type="1" range="R|L|U|B" default="U"/>
+		<sequence name="Anatomic_Region_Sequence" tag="(0008,2218)" type="2">
+			<item>
+				<macroRef include="Code_Sequence_Macro"/>
+				<sequence name="Anatomic_Region_Modifier_Sequence" tag="(0008,2220)" type="3">
+					<item>
+						<macroRef include="Code_Sequence_Macro"/>
+					</item>
+				</sequence>
+			</item>
+		</sequence>
+		<sequence name="Primary_Anatomic_Structure_Sequence" tag="(0008,2228)" type="3">
+			<item>
+				<macroRef include="Code_Sequence_Macro"/>
+				<sequence name="Primary_Anatomic_Structure_Modifier_Sequence" tag="(0008,2230)" type="3">
+					<item>
+						<macroRef include="Code_Sequence_Macro"/>
+					</item>
+				</sequence>
+			</item>
+		</sequence>
+	</module>
+	<module name="DX_Image_Module">
+		<element name="Image_Type" tag="(0008,0008)" vr="CS" type="1"/>
+		<element name="Samples_per_Pixel" tag="(0028,0002)" vr="US" type="1"/><element name="Photometric_Interpretation" tag="(0028,0004)" vr="CS" type="1" range="MONOCHROME1|MONOCHROME2"/>
+		<element name="Bits_Allocated" tag="(0028,0100)" vr="US" type="1" range="8|16"/><element name="Bits_Stored" tag="(0028,0101)" vr="US" type="1" range="6:16"/>
+		<element name="High_Bit" tag="(0028,0102)" vr="US" type="1"/><element name="Pixel_Representation" tag="(0028,0103)" vr="US" type="1" range="0"/>
+		<element name="Pixel_Intensity_Relationship" tag="(0028,1040)" vr="CS" type="1" range="LIN|LOG" default="LIN"/><element name="Pixel_Intensity_Relationship_Sign" tag="(0028,1041)" type="1" vr="SS" range="1|-1" default="1"/>
+		<element name="Rescale_Intercept" tag="(0028,1052)" vr="DS" type="1" range="0" default="0"/><element name="Rescale_Slope" tag="(0028,1053)" vr="DS" type="1" range="1" default="1"/>
+		<element name="Rescale_Type" tag="(0028,1054)" vr="LO" type="1" range="US" default="US"/><element name="Lossy_Image_Compression" tag="(0028,2110)" vr="CS" type="1" range="00|01" default="00"/>
+		<element name="Lossy_Image_Compression_Ratio" tag="(0028,2112)" vr="DS" type="1C"/><element name="Derivation_Description" tag="(0008,2111)" vr="ST" type="3"/>
+		<element name="Acquisition_Device_Processing_Description" tag="(0018,1400)" vr="LO" type="3"/><element name="Acquisition_Device_Processing_Code" tag="(0018,1401)" vr="LO" type="3"/>
+		<element name="Patient_Orientation" tag="(0020,0020)" vr="CS" type="1"/><element name="Calibration_Image" tag="(0050,0004)" vr="CS" type="3" range="YES|NO"/>
+		<element name="Burned_In_Annotation" tag="(0028,0301)" vr="CS" type="1" range="YES|NO" default="NO"/>
+		
+		
+		
+		
+		
+		
+		
+		
+		<sequence name="VOI_LUT_Sequence" tag="(0028,3010)" type="1C" dependency="(0000,0800)=PVALUE">
+			<item>
+				<element name="LUT_Descriptor" tag="(0028,3002)" vr="US" type="1C"/>
+				<element name="LUT_Explanation" tag="(0028,3003)" vr="LO" type="3"/>
+				<element name="LUT_Data" tag="(0028,3006)" vr="US" type="1C"/>
+			</item>
+		</sequence>
+		<element name="Window_Center" tag="(0028,1050)" vr="DS" type="1C"/>
+		<element name="Window_Width" tag="(0028,1051)" vr="DS" type="1C"/>
+		<element name="Window_Center_Width_Explanation" tag="(0028,1055)" vr="LO" type="3"/>
+	</module>
+	<module name="DX_Detector_Module">
+		<element name="Detector_Type" tag="(0018,7004)" vr="CS" type="2" range="DIRECT|SCINTILLATOR|STORAGE|FILM"/>
+		<element name="Detector_Configuration" tag="(0018,7005)" vr="CS" type="3" range="AREA|SLOT"/><element name="Detector_Description" tag="(0018,7006)" vr="LT" type="3"/>
+		<element name="Detector_Mode" tag="(0018,7008)" vr="LT" type="3"/><element name="Detector_ID" tag="(0018,700A)" vr="SH" type="3"/>
+		<element name="Date_of_Last_Detector_Calibration" tag="(0018,700C)" vr="DA" type="3"/><element name="Time_of_Last_Detector_Calibration" tag="(0018,700E)" vr="TM" type="3"/>
+		<element name="Exposures_on_Detector_Since_Last_Calibration" tag="(0018,7010)" vr="IS" type="3"/><element name="Exposures_on_Detector_Since_Manufactured" tag="(0018,7011)" vr="IS" type="3"/>
+		<element name="Detector_Time_Since_Last_Exposure" tag="(0018,7012)" vr="DS" type="3"/><element name="Detector_Active_Time" tag="(0018,7014)" vr="DS" type="3"/>
+		<element name="Detector_Activation_Offset_From_Exposure" tag="(0018,7016)" vr="DS" type="3"/><element name="Detector_Binning" tag="(0018,701A)" vr="DS" type="3"/>
+		<element name="Detector_Manufacturer_Name" tag="(0018,702A)" vr="LO" type="3"/><element name="Detector_Manufacturer_s_Model_Name" tag="(0018,702B)" vr="LO" type="3"/>
+		<element name="Detector_Conditions_Nominal_Flag" tag="(0018,7000)" vr="CS" type="3" range="YES|NO"/><element name="Detector_Temperature" tag="(0018,7001)" vr="DS" type="3"/>
+		
+		
+		
+		
+		
+		
+		
+		
+		<element name="Sensitivity" tag="(0018,6000)" vr="DS" type="3"/>
+        <element name="Field_of_View_Shape" tag="(0018,1147)" vr="CS" type="3" range="RECTANGLE|ROUND|HEXAGONAL"/>
+        <element name="Field_of_View_Dimension_s_" tag="(0018,1149)" vr="IS" type="3"/>
+        <element name="Field_of_View_Origin" tag="(0018,7030)" vr="DS" type="1C"/>
+        <element name="Field_of_View_Rotation" tag="(0018,7032)" vr="DS" type="1C" range="0|90|180|270"/>
+        <element name="Field_of_View_Horizontal_Flip" tag="(0018,7034)" vr="CS" type="1C" range="YES|NO"/>
+        <element name="Imager_Pixel_Spacing" tag="(0018,1164)" vr="DS" vm="2" type="1" default="TAG=(0028,0030)"/>
+        <element name="Detector_Element_Physical_Size" tag="(0018,7020)" vr="DS" type="3"/>
+        <element name="Detector_Element_Spacing" tag="(0018,7022)" vr="DS" type="3"/>
+        <element name="Detector_Active_Shape" tag="(0018,7024)" vr="CS" type="3" range="RECTANGLE|ROUND|HEXAGONAL"/>
+        <element name="Detector_Active_Dimension_s_" tag="(0018,7026)" vr="DS" type="3"/>
+        <element name="Detector_Active_Origin" tag="(0018,7028)" vr="DS" type="3"/>
+    </module>
+    <module name="Acquisition_Context_Module">
+        <sequence name="Acquisition_Context_Sequence" tag="(0040,0555)" type="2">
+            <item>
+                <element name="Value_Type" tag="(0040,A040)" vr="CS" type="3" range="TEXT|NUM|CODE|DATE|TIME|PNAME"/>
+                <sequence name="Concept_Name_Code_Sequence" tag="(0040,A043)" type="1">
+                    <item>
+                        <macroRef include="Code_Sequence_Macro"/>
+                    </item>
+                </sequence>
+                <element name="Referenced_Frame_Numbers" tag="(0040,A136)" vr="US" type="1C"/>
+                <element name="Numeric_Value" tag="(0040,A30A)" vr="DS" type="1C"/>
+                <sequence name="Measurement_Units_Code_Sequence" tag="(0040,08EA)" type="1C">
+                    <item>
+                        <macroRef include="Code_Sequence_Macro"/>
+                    </item>
+                </sequence>
+                <element name="Date" tag="(0040,A121)" vr="DA" type="1C"/>
+                <element name="Time" tag="(0040,A122)" vr="TM" type="1C"/>
+                <element name="Person_Name" tag="(0040,A123)" vr="PN" type="1C"/>
+                <element name="Text_Value" tag="(0040,A160)" vr="UT" type="1C"/>
+                <sequence name="Concept_Code_Sequence" tag="(0040,A168)" type="1C">
+                    <item>
+                        <macroRef include="Code_Sequence_Macro"/>
+                    </item>
+                </sequence>
+            </item>
+        </sequence>
+        <element name="Acquisition_Context_Description" tag="(0040,0556)" vr="ST" type="3"/>
+    </module>
+    <module name="X_Ray_Acquisition_Dose_Module">
+        <element name="KVP" tag="(0018,0060)" vr="DS" type="3"/>
+        <element name="X_ray_Tube_Current" tag="(0018,1151)" vr="IS" type="3"/>
+        <element name="X_Ray_Tube_Current_in_uA" tag="(0018,8151)" vr="DS" type="3"/>
+        <element name="Exposure_Time" tag="(0018,1150)" vr="IS" type="3"/>
+        <element name="Exposure_Time_in_uS" tag="(0018,8150)" vr="DS" type="3"/>
+        <element name="Exposure" tag="(0018,1152)" vr="IS" type="3"/>
+        <element name="Exposure_in_uAs" tag="(0018,1153)" vr="IS" type="3"/>
+        <element name="Distance_Source_to_Detector" tag="(0018,1110)" vr="DS" type="3"/>
+        <element name="Distance_Source_to_Patient" tag="(0018,1111)" vr="DS" type="3"/>
+        <element name="Image_Area_Dose_Product" tag="(0018,115E)" vr="DS" type="3"/>
+        <element name="Body_Part_Thickness" tag="(0018,11A0)" vr="DS" type="3"/>
+        <element name="Relative_X_ray_Exposure" tag="(0018,1405)" vr="IS" type="3"/>
+		<macroRef include="Exposure_Index_Macro"/>
+        <element name="Entrance_Dose" tag="(0040,0302)" vr="DS" type="3"/>
+        <element name="Entrance_Dose_in_mGy" tag="(0040,8302)" vr="DS" type="3"/>
+        <element name="Exposed_Area" tag="(0040,0303)" vr="US" type="3"/>
+        <element name="Distance_Source_to_Entrance" tag="(0040,0306)" vr="DS" type="3"/>
+        <element name="Comments_on_Radiation_Dose" tag="(0040,0310)" vr="ST" type="3"/>
+        <element name="X_Ray_Output" tag="(0040,0312)" vr="DS" type="3"/>
+        <element name="Half_Value_Layer" tag="(0040,0314)" vr="DS" type="3"/>
+        <element name="Organ_Dose" tag="(0040,0316)" vr="DS" type="3"/>
+        <element name="Organ_Exposed" tag="(0040,0318)" vr="CS" type="3" range="BREAST|GONADS|BONE MARROW|FETUS|LENS" dependency="(0040,0316)=..."/>
+        <element name="Anode_Target_Material" tag="(0018,1191)" vr="CS" type="3" range="TUNGSTEN|MOLYBDENUM|RHODIUM"/>
+        <element name="Filter_Material" tag="(0018,7050)" vr="CS" type="3" range="MOLYBDENUM|ALUMINUM|COPPER|RHODIUM|NIOBIUM|EUROPIUM|LEAD|MIXED"/>
+        <element name="Filter_Thickness_Minimum" tag="(0018,7052)" vr="DS" type="3" dependency="(0018,7050)=..."/>
+        <element name="Filter_Thickness_Maximum" tag="(0018,7054)" vr="DS" type="3" dependency="(0018,7050)=..."/>
+        <element name="Rectification_Type" tag="(0018,1156)" vr="CS" type="3" range="SINGLE PHASE|THREE PHASE|CONST POTENTIAL"/>
+    </module>
+    <module name="X_Ray_Generation_Module">
+        <element name="KVP" tag="(0018,0060)" vr="DS" type="3"/>
+        <element name="X_ray_Tube_Current" tag="(0018,1151)" vr="IS" type="3"/>
+        <element name="X_Ray_Tube_Current_in_uA" tag="(0018,8151)" vr="DS" type="3"/>
+        <element name="Exposure_Time" tag="(0018,1150)" vr="IS" type="3"/>
+        <element name="Exposure_Time_in_uS" tag="(0018,8150)" vr="DS" type="3"/>
+        <element name="Exposure" tag="(0018,1152)" vr="IS" type="3"/>
+        <element name="Exposure_in_uAs" tag="(0018,1153)" vr="IS" type="3"/>
+        <element name="Exposure_Control_Mode" tag="(0018,7060)" vr="CS" type="3" range="MANUAL|AUTOMATIC"/>
+        <element name="Exposure_Control_Mode_Description" tag="(0018,7062)" vr="LT" type="3"/>
+        <element name="Exposure_Status" tag="(0018,7064)" vr="CS" type="3" range="NORMAL|ABORTED"/>
+        <element name="Phototimer_Setting" tag="(0018,7065)" vr="DS" type="3"/>
+        <element name="Focal_Spot" tag="(0018,1190)" vr="DS" type="3"/>
+        <element name="Anode_Target_Material" tag="(0018,1191)" vr="CS" type="3" range="TUNGSTEN|MOLYBDENUM|RHODIUM"/>
+        <element name="Rectification_Type" tag="(0018,1156)" vr="CS" type="3" range="SINGLE PHASE|THREE PHASE|CONST POTENTIAL"/>
+    </module>
+    <module name="X_Ray_Filtration_Module">
+        <element name="Filter_Type" tag="(0018,1160)" vr="SH" type="3" range="STRIP|WEDGE|BUTTERFLY|MULTIPLE|NONE"/>
+        <element name="Filter_Material" tag="(0018,7050)" vr="CS" type="3" range="MOLYBDENUM|ALUMINUM|COPPER|RHODIUM|NIOBIUM|EUROPIUM|LEAD|MIXED"/>
+        <element name="Filter_Thickness_Minimum" tag="(0018,7052)" vr="DS" type="3" dependency="(0018,7050)=..."/>
+        <element name="Filter_Thickness_Maximum" tag="(0018,7054)" vr="DS" type="3" dependency="(0018,7050)=..."/>
+    </module>
+    <module name="X_Ray_Grid_Module">
+        <element name="Grid" tag="(0018,1166)" vr="CS" type="3" range="FIXED|FOCUSED|RECIPROCATING|PARALLEL|CROSSED|NONE"/>
+        <element name="Grid_Absorbing_Material" tag="(0018,7040)" vr="LT" type="3"/>
+        <element name="Grid_Spacing_Material" tag="(0018,7041)" vr="LT" type="3"/>
+        <element name="Grid_Thickness" tag="(0018,7042)" vr="DS" type="3"/>
+        <element name="Grid_Pitch" tag="(0018,7044)" vr="DS" type="3"/>
+        <element name="Grid_Aspect_Ratio" tag="(0018,7046)" vr="IS" type="3"/>
+        <element name="Grid_Period" tag="(0018,7048)" vr="DS" type="3" dependency="(0018,1166)=RECIPROCATING"/>
+        <element name="Grid_Focal_Distance" tag="(0018,704C)" vr="DS" type="3"/>
+    </module>
+    <module name="X_Ray_Collimator_Module">
+        <element name="Collimator_Shape" tag="(0018,1700)" vr="CS" type="1" range="RECTANGULAR|CIRCULAR|POLYGONAL"/>
+        <element name="Collimator_Left_Vertical_Edge" tag="(0018,1702)" vr="IS" type="1C" dependency="(0018,1700)=RECTANGULAR"/>
+        <element name="Collimator_Right_Vertical_Edge" tag="(0018,1704)" vr="IS" type="1C" dependency="(0018,1700)=RECTANGULAR"/>
+        <element name="Collimator_Upper_Horizontal_Edge" tag="(0018,1706)" vr="IS" type="1C" dependency="(0018,1700)=RECTANGULAR"/>
+        <element name="Collimator_Lower_Horizontal_Edge" tag="(0018,1708)" vr="IS" type="1C" dependency="(0018,1700)=RECTANGULAR"/>
+        <element name="Center_of_Circular_Collimator" tag="(0018,1710)" vr="IS" type="1C" dependency="(0018,1700)=CIRCULAR"/>
+        <element name="Radius_of_Circular_Collimator" tag="(0018,1712)" vr="IS" type="1C" dependency="(0018,1700)=CIRCULAR"/>
+        <element name="Vertices_of_the_Polygonal_Collimator" tag="(0018,1720)" vr="IS" type="1C" dependency="(0018,1700)=POLYGONAL"/>
+    </module>
+    <!--
+	The following modules are for MG IOD:
+ 	-->
+    <module name="Mammography_Series_Module">
+        <element name="Modality" tag="(0008,0060)" type="1" vr="CS" vm="1"/>
+    </module>
+    <module name="Mammography_Image_Module">
+        <element name="Positioner_Type" tag="(0018,1508)" vr="CS" type="1" range="MAMMOGRAPHIC|NONE" default="MAMMOGRAPHIC"/>
+        <element name="Distance_Source_to_Detector" tag="(0018,1110)" vr="DS" type="3"/>
+        <element name="Distance_Source_to_Patient" tag="(0018,1111)" vr="DS" type="3"/>
+        <element name="Positioner_Primary_Angle" tag="(0018,1510)" vr="DS" type="3"/>
+        <element name="Positioner_Secondary_Angle" tag="(0018,1511)" vr="DS" type="3"/>
+        <element name="Image_Laterality" tag="(0020,0062)" vr="CS" type="1" range="R|L|B" default="L"/>
+        <element name="Organ_Exposed" tag="(0040,0318)" type="1" vr="CS" vm="1" range="BREAST" default="BREAST"/>
+        <element name="Implant_Present" tag="(0028,1300)" vr="CS" type="3" range="YES|NO"/>
+        <element name="Partial_View" tag="(0028,1350)" vr="CS" type="3" range="YES|NO"/>
+        <element name="Partial_View_Description" tag="(0028,1351)" vr="ST" type="3"/>
+        <sequence name="View_Code_Sequence" tag="(0054,0220)" type="2">
+            <item>
+                <macroRef include="Code_Sequence_Macro"/>
+                <sequence name="View_Modifier_Code_Sequence" tag="(0054,0222)" type="2">
+                    <item>
+                        <macroRef include="Code_Sequence_Macro"/>
+                    </item>
+                </sequence>
+            </item>
+        </sequence>
+        <macroRef include="General_Anatomy_Mandatory_Macro"/>
+    </module>
+    <!--
+	The following modules are for GSPS IOD:
+ 	-->
+    <module name="Presentation_Series_Module">
+        <element name="Modality" tag="(0008,0060)" type="1" vr="CS" vm="1"/>
+    </module>
+    <module name="Displayed_Area_Module">
+        <sequence name="Displayed_Area_Selection_Sequence" tag="(0070,005A)" type="1">
+            <item>
+                <sequence name="Referenced_Image_Sequence" tag="(0008,1140)" type="3">
+                    <item>
+                        <element name="Referenced_SOP_Class_UID" tag="(0008,1150)" vr="UI" type="1C" default="%RUNTIME%"/>
+                        <element name="Referenced_SOP_Instance_UID" tag="(0008,1155)" vr="UI" type="1C" default="%RUNTIME%"/>
+                        <element name="Referenced_Frame_Number" tag="(0008,1160)" vr="IS" type="3"/>
+                    </item>
+                </sequence>
+                <element name="Displayed_Area_Top_Left_Hand_Corner" tag="(0070,0052)" vr="SL" type="1"/>
+                <element name="Displayed_Area_Bottom_Right_Hand_Corner" tag="(0070,0053)" vr="SL" type="1"/>
+                <element name="Presentation_Size_Mode" tag="(0070,0100)" vr="CS" type="1" range="SCALE TO FIT|TRUE SIZE|MAGNIFY" default="SCALE TO FIT"/>
+                <element name="Presentation_Pixel_Spacing" tag="(0070,0101)" vr="DS" type="1C" dependency="(0070,0100)=TRUE SIZE"/>
+                <element name="Presentation_Pixel_Aspect_Ratio" tag="(0070,0102)" vr="IS" type="1C" dependency="(0070,0101)=!"/>
+                <element name="Presentation_Pixel_Magnification_Ratio" tag="(0070,0103)" vr="FL" type="1C" dependency="(0070,0100)=MAGNIFY"/>
+            </item>
+        </sequence>
+    </module>
+    <module name="Softcopy_Presentation_LUT_module">
+        <sequence name="Presentation_LUT_Sequence" tag="(2050,0010)" type="1C" dependency="(2050,0020)=!">
+            <item>
+                <element name="LUT_Descriptor" tag="(0028,3002)" vr="US" type="1C" default="4096\0\12" dependency="(2050,0020)=!"/>
+                <element name="LUT_Explanation" tag="(0028,3003)" vr="LO" type="1C" default="LUT with Gamma 1.0" dependency="(2050,0020)=!"/>
+                <element name="LUT_Data" tag="(0028,3006)" vr="US" type="1C" default="%RUNTIME%" dependency="(2050,0020)=!"/>
+            </item>
+        </sequence>
+        <element name="Presentation_LUT_Shape" tag="(2050,0020)" vr="CS" type="1C" default="IDENTITY" range="IDENTITY|INVERSE"/>
+    </module>
+    <module name="Presentation_State_Module">
+        <element name="Instance_Number" tag="(0020,0013)" vr="IS" type="1" default="%RUNTIME%"/>
+        <element name="Content_Label" tag="(0070,0080)" type="1" vr="CS" default="NA"/>
+        <element name="Content_Description" tag="(0070,0081)" vr="LO" type="2"/>
+        <element name="Presentation_Creation_Date" tag="(0070,0082)" vr="DA" type="1" default="%DATE%"/>
+        <element name="Presentation_Creation_Time" tag="(0070,0083)" vr="TM" type="1" default="%TIME%"/>
+        <element name="Content_Creator_s_Name" tag="(0070,0084)" vr="PN" type="2"/>
+        <sequence name="Referenced_Series_Sequence" tag="(0008,1115)" type="1">
+            <item>
+                <element name="Series_Instance_UID" tag="(0020,000E)" vr="UI" type="1" default="%RUNTIME%"/>
+                <sequence name="Referenced_Image_Sequence" tag="(0008,1140)" type="1">
+                    <item>
+                        <element name="Referenced_SOP_Class_UID" tag="(0008,1150)" vr="UI" type="1" default="%RUNTIME%"/>
+                        <element name="Referenced_SOP_Instance_UID" tag="(0008,1155)" vr="UI" type="1" default="%RUNTIME%"/>
+                        <element name="Referenced_Frame_Number" tag="(0008,1160)" type="1" vr="IS" default="1"/>
+                    </item>
+                </sequence>
+            </item>
+        </sequence>
+        <element name="Shutter_Presentation_Value" tag="(0018,1622)" vr="US" type="1C"/>
+        <sequence name="Mask_Subtraction_Sequence" tag="(0028,6100)" type="1C">
+            <item>
+                <element name="Mask_Operation" tag="(0028,6101)" vr="CS" type="1" range="AVG_SUB|TID"/>
+                <element name="Contrast_Frame_Averaging" tag="(0028,6112)" vr="US" type="1C"/>
+                <element name="Recommended_Viewing_Mode" tag="(0028,1090)" vr="CS" type="1C" range="SUB" dependency="(0028,6100)=..."/>
+            </item>
+        </sequence>
+    </module>
+    <module name="Display_Shutter_Module">
+        <element name="Shutter_Shape" tag="(0018,1600)" vr="CS" type="2" range="RECTANGULAR|CIRCULAR|POLYGONAL" default="POLYGONAL"/>
+        <element name="Shutter_Left_Vertical_Edge" tag="(0018,1602)" vr="IS" type="1C" dependency="(0018,1600)=RECTANGULAR"/>
+        <element name="Shutter_Right_Vertical_Edge" tag="(0018,1604)" vr="IS" type="1C" dependency="(0018,1600)=RECTANGULAR"/>
+        <element name="Shutter_Upper_Horizontal_Edge" tag="(0018,1606)" vr="IS" type="1C" dependency="(0018,1600)=RECTANGULAR"/>
+        <element name="Shutter_Lower_Horizontal_Edge" tag="(0018,1608)" vr="IS" type="1C" dependency="(0018,1600)=RECTANGULAR"/>
+        <element name="Center_of_Circular_Shutter" tag="(0018,1610)" vr="IS" type="1C" dependency="(0018,1600)=CIRCULAR"/>
+        <element name="Radius_of_Circular_Shutter" tag="(0018,1612)" vr="IS" type="1C" dependency="(0018,1600)=CIRCULAR"/>
+        <element name="Vertices_of_The_Polygonal_Shutter" tag="(0018,1620)" vr="IS" type="2C" default="0\0" dependency="(0018,1600)=POLYGONAL"/>
+        <element name="Shutter_Presentation_Value" tag="(0018,1622)" vr="US" type="3"/>
+    </module>
+    <module name="Spatial_Transformation_Module">
+        <element name="Image_Rotation" tag="(0070,0042)" type="1" vr="US" vm="1" range="0|90|180|270" default="0"/>
+        <element name="Image_Horizontal_Flip" tag="(0070,0041)" type="1" vr="CS" vm="1" range="Y|N" default="N"/>
+    </module>
+    <module name="Softcopy_VOI_LUT_Module">
+        <sequence name="Softcopy_VOI_LUT_Sequence" tag="(0028,3110)" type="1">
+            <item>
+                <sequence name="Referenced_Image_Sequence" tag="(0008,1140)" type="1C">
+                    <item>
+                        <element name="Referenced_SOP_Class_UID" tag="(0008,1150)" vr="UI" type="1C" default="%RUNTIME%"/>
+                        <element name="Referenced_SOP_Instance_UID" tag="(0008,1155)" vr="UI" type="1C" default="%RUNTIME%"/>
+                        <element name="Referenced_Frame_Number" tag="(0008,1160)" vr="IS" type="1" default="1"/>
+                    </item>
+                </sequence>
+                <sequence name="VOI_LUT_Sequence" tag="(0028,3010)" type="1C">
+                    <item>
+                        <element name="LUT_Descriptor" tag="(0028,3002)" vr="US" type="1C"/>
+                        <element name="LUT_Explanation" tag="(0028,3003)" vr="LO" type="3"/>
+                        <element name="LUT_Data" tag="(0028,3006)" vr="US" type="1C"/>
+                    </item>
+                </sequence>
+                <element name="Window_Center" tag="(0028,1050)" vr="DS" type="1C" default="2048" dependency="(0028,3010)=!"/>
+                <element name="Window_Width" tag="(0028,1051)" vr="DS" type="1C" default="4096" dependency="(0028,3010)=!"/>
+                <element name="Window_Center_Width_Explanation" tag="(0028,1055)" type="3"/>
+            </item>
+        </sequence>
+    </module>
+    <module name="Overlay_Plane_Module">
+        <element name="Overlay_Rows" tag="(6000,0010)" type="3" vr="US" vm="1"/>
+        <element name="Overlay_Columns" tag="(6000,0011)" type="3" vr="US" vm="1"/><element name="Overlay_Type" tag="(6000,0040)" type="3" vr="CS" vm="1" range="G|R"/>
+        <element name="Overlay_Origin" tag="(6000,0050)" type="3" vr="SS" vm="2"/><element name="Overlay_Bits_Allocated" tag="(6000,0100)" type="3" vr="US" vm="1" range="1"/>
+        <element name="Overlay_Bit_Position" tag="(6000,0102)" type="3" vr="US" vm="1" range="0"/>
+        
+        
+        <element name="Overlay_Data" tag="(6000,3000)" type="3" vr="OW" vm="1"/>
+    </module>
+
+    <!--
+	 override section:
+	 to replace existing elements or sequences
+    to add new element with default.
+    It is recommended that the vr and vm should be explicitely listed in override nodes.
+
+	This section lists all overrides used by the ElementLists.
+	The elements and sequences listed  will be added to or override the existing ones in the elementList.
+ 	-->
+	<override name="Common_override">
+	</override>
+	<override name="SC_override">
+		<element name="Modality" tag="(0008,0060)" type="1" vr="CS" vm="1" range="OT" default="OT"/>
+		<element name="Conversion_Type" tag="(0008,0064)" type="1" vr="CS" vm="1" range="DF" default="DF"/>
+	</override>
+	<override name="CR_override">
+		<element name="Modality" tag="(0008,0060)" type="1" vr="CS" vm="1" range="CR" default="CR"/>
+	</override>
+	<override name="DX_override">
+		<element name="Modality" tag="(0008,0060)" type="1" vr="CS" vm="1" range="DX" default="DX"/>
+		<element name="Presentation_Intent_Type" tag="(0008,0068)" type="1" vr="CS" vm="1" range="FOR PRESENTATION|FOR PROCESSING" default="CHOICE=RAW?FOR PROCESSING:FOR PRESENTATION"/>
+	</override>
+	<override name="MG_override">
+		<element name="Modality" tag="(0008,0060)" type="1" vr="CS" vm="1" range="MG" default="MG"/>
+		<element name="Presentation_Intent_Type" tag="(0008,0068)" type="1" vr="CS" vm="1" range="FOR PRESENTATION|FOR PROCESSING" default="CHOICE=RAW?FOR PROCESSING:FOR PRESENTATION"/>
+	</override>
+	<override name="GSPS_override">
+		<element name="Modality" tag="(0008,0060)" type="1" vr="CS" vm="1" range="PR" default="PR"/>
+		<element name="Presentation_Intent_Type" tag="(0008,0068)" type="1" vr="CS" vm="1" range="FOR PRESENTATION" default="FOR PRESENTATION"/>
+	</override>
+	<!--
+	ElementList section:
+	This section lists all the supported Modality IODs.
+	Each elementList must list all the elements, sequences, Modules and overrides of a particular Modality
+	that MIM Core supports.
+ 	-->
+	<elementList name="SC">
+		<moduleRef include="Patient_Module"/>
+		<moduleRef include="Patient_Study_Module"/>
+		<moduleRef include="General_Study_Module"/>
+		<moduleRef include="General_Series_Module"/>
+		<moduleRef include="General_Image_Module"/>
+		<moduleRef include="Image_Pixel_Module"/>
+		<moduleRef include="SOP_Common_Module"/>
+		<moduleRef include="General_Equipment_Module"/>
+		<moduleRef include="SC_Equipment_Module"/>
+		<moduleRef include="Contrast_Bolus_Module"/>
+		<moduleRef include="Modality_LUT_Module"/>
+		<moduleRef include="SC_Image_Module"/>
+        <moduleRef include="Overlay_Plane_Module" dependency="(0000,0800)=OVERLAYS"/>
+        <moduleRef include="VOI_LUT_Module" dependency="(0000,0800)=PVALUE"/>
+		<moduleRef include="Presentation_LUT_module" dependency="(0000,0800)=PVALUE|RAW"/>
+		<overrideRef include="Common_override"/>
+		<overrideRef include="SC_override"/>
+	</elementList>
+	<elementList name="CR">
+		<moduleRef include="Patient_Module"/>
+		<moduleRef include="Patient_Study_Module"/>
+		<moduleRef include="General_Study_Module"/>
+		<moduleRef include="General_Series_Module"/>
+		<moduleRef include="General_Equipment_Module"/>
+		<moduleRef include="General_Image_Module"/>
+		<moduleRef include="Image_Pixel_Module"/>
+		<moduleRef include="Image_Plane_Module"/>
+		<moduleRef include="Contrast_Bolus_Module"/>
+		<moduleRef include="Modality_LUT_Module"/>
+		<moduleRef include="SOP_Common_Module"/>
+		<moduleRef include="CR_Series_Module"/>
+		<moduleRef include="CR_Image_Module"/>
+        <moduleRef include="Overlay_Plane_Module" dependency="(0000,0800)=OVERLAYS"/>
+        <moduleRef include="VOI_LUT_Module" dependency="(0000,0800)=PVALUE"/>
+		<moduleRef include="Presentation_LUT_module" dependency="(0000,0800)=PVALUE|RAW"/>
+        <overrideRef include="Common_override"/>
+		<overrideRef include="CR_override"/>
+	</elementList>
+	<elementList name="DX">
+		<moduleRef include="Patient_Module"/>
+		<moduleRef include="General_Study_Module"/>
+		<moduleRef include="Patient_Study_Module"/>
+		<moduleRef include="General_Series_Module"/>
+		<moduleRef include="General_Equipment_Module"/>
+		<moduleRef include="General_Image_Module"/>
+		<moduleRef include="Image_Pixel_Module"/>
+		<moduleRef include="Image_Plane_Module"/>
+		<moduleRef include="Contrast_Bolus_Module"/>
+		<moduleRef include="Modality_LUT_Module"/>
+		<moduleRef include="SOP_Common_Module"/>
+		<moduleRef include="Display_Shutter_Module" dependency="(0000,0800)=GSPS"/>
+		<moduleRef include="DX_Series_Module"/>
+		<moduleRef include="DX_Image_Module"/>
+		<moduleRef include="DX_Positioning_Module"/>
+		<moduleRef include="DX_Anatomy_Imaged_Module"/>
+		<moduleRef include="DX_Detector_Module"/>
+		<moduleRef include="Acquisition_Context_Module"/>
+		<moduleRef include="VOI_LUT_Module" dependency="(0000,0800)=PVALUE"/>
+		<moduleRef include="Presentation_LUT_module" dependency="(0000,0800)=PVALUE|RAW"/>
+		<moduleRef include="X_Ray_Acquisition_Dose_Module"/>
+		<moduleRef include="X_Ray_Filtration_Module"/>
+		<moduleRef include="X_Ray_Collimator_Module" dependency="(0018,1700)=..."/>
+		<moduleRef include="X_Ray_Grid_Module"/>
+        <moduleRef include="Overlay_Plane_Module" dependency="(0000,0800)=OVERLAYS"/>
+        <overrideRef include="Common_override"/>
+		<overrideRef include="DX_override"/>
+	</elementList>
+	<elementList name="MG">
+		<moduleRef include="Patient_Module"/>
+		<moduleRef include="General_Study_Module"/>
+		<moduleRef include="Patient_Study_Module"/>
+		<moduleRef include="General_Series_Module"/>
+		<moduleRef include="General_Equipment_Module"/>
+		<moduleRef include="General_Image_Module"/>
+		<moduleRef include="Image_Pixel_Module"/>
+		<moduleRef include="Image_Plane_Module"/>
+		<moduleRef include="Contrast_Bolus_Module"/>
+		<moduleRef include="Modality_LUT_Module"/>
+		<moduleRef include="SOP_Common_Module"/>
+		<moduleRef include="Display_Shutter_Module" dependency="(0000,0800)=GSPS"/>
+        <moduleRef include="Overlay_Plane_Module" dependency="(0000,0800)=OVERLAYS"/>
+        <moduleRef include="DX_Series_Module"/>
+		<moduleRef include="DX_Positioning_Module"/>
+		<moduleRef include="DX_Anatomy_Imaged_Module"/>
+        <moduleRef include="DX_Image_Module"/>
+        <moduleRef include="DX_Detector_Module"/>
+		<moduleRef include="Acquisition_Context_Module"/>
+		<moduleRef include="VOI_LUT_Module" dependency="(0000,0800)=PVALUE"/>
+		<moduleRef include="Presentation_LUT_module" dependency="(0000,0800)=PVALUE|RAW"/>
+		<moduleRef include="X_Ray_Acquisition_Dose_Module"/>
+		<moduleRef include="X_Ray_Filtration_Module"/>
+		<moduleRef include="X_Ray_Collimator_Module" dependency="(0018,1700)=..."/>
+		<moduleRef include="X_Ray_Generation_Module"/>
+		<moduleRef include="X_Ray_Grid_Module"/>
+        <moduleRef include="Mammography_Series_Module"/>
+        <moduleRef include="Mammography_Image_Module"/>
+        <overrideRef include="Common_override"/>
+		<overrideRef include="MG_override"/>
+	</elementList>
+	<elementList name="GSPS">
+		<moduleRef include="Patient_Module"/>
+		<moduleRef include="General_Study_Module"/>
+		<moduleRef include="Patient_Study_Module"/>
+		<moduleRef include="General_Series_Module"/>
+		<moduleRef include="DX_Series_Module" dependency="(0008,0060)=DX|MG"/>
+		<moduleRef include="CR_Series_Module" dependency="(0008,0060)=CR"/>
+		<moduleRef include="SOP_Common_Module"/>
+		<moduleRef include="Presentation_Series_Module"/>
+		<moduleRef include="General_Equipment_Module"/>
+		<moduleRef include="Displayed_Area_Module"/>
+		<moduleRef include="Softcopy_Presentation_LUT_module"/>
+		<moduleRef include="Presentation_State_Module"/>
+		<moduleRef include="Display_Shutter_Module"/>
+        <moduleRef include="Overlay_Plane_Module" dependency="(0000,0800)=OVERLAYS"/>
+        <moduleRef include="Spatial_Transformation_Module"/>
+		<moduleRef include="Softcopy_VOI_LUT_Module"/>
+		<overrideRef include="GSPS_override"/>
+	</elementList>
+	<!--
+	Run-time adjustment modules:
+	These nodes are standalone nodes that may be added to a Modality's elementList during run-time under
+	certain condition to be defined by developers.
+
+    Note: elimination nodes are used to delete existing elements or sequences
+	-->
+	<override name="PVALUE_override">
+		<element name="Window_Center" tag="(0028,1050)" type="3" vr="DS" vm="1" range="2048" default="2048"/>
+		<element name="Window_Width" tag="(0028,1051)" type="1C" vr="DS" vm="1" range="4096" default="4096"/>
+	</override>
+	<elimination name="PVALUE_removal">
+		<sequence name="VOI_LUT_Sequence" tag="(0028,3010)" type="3"/>
+	</elimination>
+	<adjustment name="PVALUE" dependency="(0000,0800)=NOVOILUT">
+		<eliminationRef include="PVALUE_removal"/>
+		<overrideRef include="PVALUE_override"/>
+	</adjustment>		
+	<!--
+	Configured addition Modules:
+	These modules are standalone nodes that can be added to an elementList by configuration.
+
+	The two extension's of PRIVATE and EXTENSION are recognized by MIM Core Configuration.
+	-->
+	<macro name="CR_Extension">
+		<element name="Quality_Control_Image" tag="(0028,0300)" type="3"/>
+		<element name="Speciman_Accession_Number" tag="(0040,050A)" type="3"/>
+		<element name="Speciman_Sequence" tag="(0040,0550)" type="3"/>
+		<element name="Calibration_Image" tag="(0050,0004)" type="3"/>
+		<element name="X_Ray_Image_Receptor_Translation" tag="(3002,000D)" type="3"/>
+		<sequence name="Fluence_Map_Sequence" tag="(3002,0040)" type="3"/>
+	</macro>
+	<macro name="China_Vet">
+		<element name="Admitting_Diagnoses_Description" tag="(0008,1080)" type="3"/>
+		<element name="Medical_Alerts" tag="(0010,2000)" type="3"/>
+		<element name="Breed" tag="(0010,2160)" type="3"/>
+	</macro>
+    <!-- These tags are primarily a mix of DX tags that V4 was configured to deliver, they
+    are here for backwards compatibility only.-->
+    <macro name="Non_CR_Tags_Sent_In_DRV4x">
+        <element name="Filter_Type" tag="(0018,1160)" vr="SH" type="3"/>
+        <element name="Filter_Material" tag="(0018,7050)" vr="CS" type="3" range="MOLYBDENUM|ALUMINUM|COPPER|RHODIUM|NIOBIUM|EUROPIUM|LEAD|MIXED"/>
+        <element name="Filter_Thickness_Minimum" tag="(0018,7052)" vr="DS" type="3" dependency="(0018,7050)=..."/>
+        <element name="Filter_Thickness_Maximum" tag="(0018,7054)" vr="DS" type="3" dependency="(0018,7050)=..."/>
+        <element name="Detector_ID" tag="(0018,700A)" vr="SH" type="3"/>
+        <element name="Focal_Spot_s_" tag="(0018,1190)" vr="DS" type="3"/>
+        <element name="Detector_Temperature" tag="(0018,7001)" vr="DS" type="3"/>
+        <element name="Grid" tag="(0018,1166)" vr="CS" type="3" range="FIXED|FOCUSED|RECIPROCATING|PARALLEL|CROSSED|NONE"/>
+        <element name="Grid_Focal_Distance" tag="(0018,704C)" vr="DS" type="3"/>
+        <element name="Field_of_View_Shape" tag="(0018,1147)" vr="CS" type="3" range="RECTANGLE|ROUND|HEXAGONAL"/>
+        <element name="Field_of_View_Dimension_s_" tag="(0018,1149)" vr="IS" type="3"/>
+        <element name="Image_Area_Dose_Product" tag="(0018,115E)" vr="DS" type="3"/>
+    </macro>
+	<macro name="CR_Private">
+		<element name="private_Directview_Group" tag="(0029,0010)" type="3" vr="LO" vm="1"/>
+		<element name="private_Ptone_Window_Center" tag="(0029,1002)" type="3" vr="IS" vm="1"/>
+		<element name="private_Ptone_Window_Width" tag="(0029,1003)" type="3" vr="IS" vm="1"/>
+		<element name="private_Body_Part_Examined" tag="(0029,1004)" type="3" vr="LO" vm="1"/>
+		<element name="private_View_Position" tag="(0029,1005)" type="3" vr="LO" vm="1"/>
+		<element name="private_Reprocessed_Image" tag="(0029,1006)" type="3" vr="LO" vm="1"/>
+		<element name="private_Sensitivity_Label" tag="(0029,1007)" type="3" vr="LO" vm="1"/>
+		<element name="private_Imaging_Data1" tag="(0029,1008)" type="3" vr="UT" vm="1"/>
+		<element name="private_Imaging_Data2" tag="(0029,1009)" type="3" vr="UN" vm="1"/>
+		<element name="private_Imaging_Data3" tag="(0029,1010)" type="3" vr="UN" vm="1"/>
+		<element name="private_View_Name" tag="(0029,1015)" type="3" vr="LO" vm="1"/>
+		<element name="private_View_Guid" tag="(0029,1016)" type="3" vr="LO" vm="1"/>
+		<element name="private_Processing_View_Guid" tag="(0029,1017)" type="3" vr="LO" vm="1"/>
+		<element name="private_Eclipse_State" tag="(0029,1018)" type="3" vr="UT" vm="1"/>
+		<element name="private_Flip" tag="(0029,1019)" type="3" vr="IS" vm="1"/>
+		<element name="private_Rotation" tag="(0029,101a)" type="3" vr="IS" vm="1"/>
+		<element name="private_HarvestType" tag="(0029,101b)" type="3" vr="IS" vm="1"/>		
+		<element name="private_HarvestParameters" tag="(0029,101c)" type="3" vr="LT" vm="1"/>
+		<element name="private_ZEncoderPosition" tag="(0029,101d)" type="3" vr="DS" vm="1"/>
+		<element name="private_PreviewBitsAllocated" tag="(0029,10fa)" type="3" vr="US" vm="1"/>
+		<element name="private_PreviewBitsStored" tag="(0029,10fb)" type="3" vr="US" vm="1"/>
+		<element name="private_PreviewRows" tag="(0029,10fc)" type="3" vr="US" vm="1"/>
+		<element name="private_PreviewColumns" tag="(0029,10fd)" type="3" vr="US" vm="1"/>
+		<element name="private_PreviewPixelData" tag="(0029,10fe)" type="3" vr="OW" vm="1"/>
+		<element name="private_ExamClass" tag="(0029,10ff)" type="3" vr="CS" vm="1"/>
+    	</macro>
+	<extension name="PRIVATE">
+		<macroRef include="CR_Private"/>
+	</extension>
+	<extension name="EXTENSION">
+		<macroRef include="CR_Extension"/>
+		<macroRef include="China_Vet"/>
+		<macroRef inlcude="Non_CR_Tags_Sent_In_DRV4x"/>
+	</extension>
+	<extension name="MIM" dependency="(0000,0800)=PVALUE|LUMINANCE|NOVOILUT">
+		<eliminationRef include="PVALUE_removal"/>
+		<element name="Window_Center" tag="(0028,1050)" type="3" vr="DS" vm="1" range="2048" default="2048"/>
+		<element name="Window_Width" tag="(0028,1051)" type="1C" vr="DS" vm="1" range="4096" default="4096"/>
+	</extension>
+	<!--
+	Modality rules:
+	modality is used to established ordering and conditions of association for each SopClass.
+	Attribute rules:
+	name: CR, DX, MG, RT...
+	uid : the SOPClass UID for the modality
+	alias: additional information about the Modality.
+	priority: processing precedence of the modality, "1" indicates the preferred modality.
+	settings: the run-time enviroment settings if this Modality is used. Ex: RAW,NOGSPS,VOILUT
+	dependency: same rule as others
+	mode: use the combnination of these keywords to fine tune additional configuration (separated by commas)
+	-DEBUG
+	-ADDMISSINGS
+	-NOGSPS
+	-WARNINGS=WARNING|NOTMATCHED|ATTRIBUTEERROR|OUTOFRESOURCE|CANNOTUNDERSTAND
+	-DUMPPATH=D:\tmp\
+	-TESTPATH=D:\test\
+	ex: mode=DEBUG,ADDMISSINGS,WARNINGS=WARNING|NOTMATCHED|ATTRIBUTEERROR|OUTOFRESOURCE,DUMPPATH=D:\temp\,TESTPATH=D:\test\
+
+	Precedences:
+	These "Precedences" node is the one that the XMLDocument loads the first time when it comes up. This allows all the nodes of this file
+	to be loaded into the DOM run-time library so the subsequent searches will be quickler.
+	It is recommended that this section is the last thing before the library ends. DO NOT MOVE IT UP.
+  	-->
+	<association name="CRPrecedences">
+		<modality name="CR" uid="1.2.840.10008.5.1.4.1.1.1" priority="1"/>
+		<modality name="SC" uid="1.2.840.10008.5.1.4.1.1.7" priority="2"/>
+		<modality name="GSPS" uid="1.2.840.10008.5.1.4.1.1.11.1" priority="3" dependency="(0000,0800)=PVALUE"/>
+		<modality name="SCPM" uid="1.2.840.10008.1.20.1" priority="4" dependency="(0000,0800)=SCPM"/>
+	</association>
+	<association name="DXPrecedences">
+		<modality name="DX" uid="1.2.840.10008.5.1.4.1.1.1.1" alias="FOR PRESENTATION" priority="1" dependency="(0000,0800)=PVALUE|LUMINANCE|DENSITY|FOR PRESENTATION"/>
+		<modality name="DX" uid="1.2.840.10008.5.1.4.1.1.1.1.1" alias="FOR PROCESSING" priority="2" settings="NOGSPS,VOILUT" dependency="(0000,0800)=RAW|FOR PROCESSING"/>
+		<modality name="CR" uid="1.2.840.10008.5.1.4.1.1.1" priority="3"/>
+		<modality name="SC" uid="1.2.840.10008.5.1.4.1.1.7" priority="4"/>
+		<modality name="GSPS" uid="1.2.840.10008.5.1.4.1.1.11.1" priority="5" dependency="(0000,0800)=PVALUE"/>
+		<modality name="SCPM" uid="1.2.840.10008.1.20.1" priority="6" dependency="(0000,0800)=SCPM"/>
+	</association>
+	<association name="MGPrecedences">
+		<modality name="MG" uid="1.2.840.10008.5.1.4.1.1.1.2" alias="FOR PRESENTATION" priority="1" dependency="(0000,0800)=PVALUE|LUMINANCE|DENSITY|FOR PRESENTATION"/>
+		<modality name="MG" uid="1.2.840.10008.5.1.4.1.1.1.2.1" alias="FOR PROCESSING" priority="2" settings="NOGSPS,VOILUT" dependency="(0000,0800)=RAW|FOR PROCESSING"/>
+		<modality name="DX" uid="1.2.840.10008.5.1.4.1.1.1.1" alias="FOR PRESENTATION" priority="3" dependency="(0000,0800)=PVALUE|LUMINANCE|DENSITY|FOR PRESENTATION"/>
+		<modality name="DX" uid="1.2.840.10008.5.1.4.1.1.1.1.1" alias="FOR PROCESSING" priority="4" settings="NOGSPS,VOILUT" dependency="(0000,0800)=RAW|FOR PROCESSING"/>
+		<modality name="CR" uid="1.2.840.10008.5.1.4.1.1.1" priority="5"/>
+		<modality name="SC" uid="1.2.840.10008.5.1.4.1.1.7" priority="6"/>
+		<modality name="GSPS" uid="1.2.840.10008.5.1.4.1.1.11.1" priority="7" dependency="(0000,0800)=PVALUE"/>
+		<modality name="SCPM" uid="1.2.840.10008.1.20.1" priority="8" dependency="(0000,0800)=SCPM"/>
+	</association>
+	<association name="SCPrecedences">
+		<modality name="SC" uid="1.2.840.10008.5.1.4.1.1.7" priority="1"/>
+		<modality name="GSPS" uid="1.2.840.10008.5.1.4.1.1.11.1" priority="2" dependency="(0000,0800)=PVALUE"/>
+		<modality name="SCPM" uid="1.2.840.10008.1.20.1" priority="3" dependency="(0000,0800)=SCPM"/>
+	</association>
+	<association name="TESTPrecedences">
+		<modality name="DX" uid="1.2.840.10008.5.1.4.1.1.1.1" alias="FOR PRESENTATION" priority="1" mode="DUMPPATH=D:\tmp\" dependency="(0000,0800)=PVALUE|LUMINANCE|DENSITY|FOR PRESENTATION"/>
+		<modality name="DX" uid="1.2.840.10008.5.1.4.1.1.1.1.1" alias="FOR PROCESSING" priority="2" settings="NOGSPS,VOILUT" dependency="(0000,0800)=RAW|FOR PROCESSING"/>
+		<modality name="CR" uid="1.2.840.10008.5.1.4.1.1.1" priority="3"/>
+		<modality name="SC" uid="1.2.840.10008.5.1.4.1.1.7" priority="4"/>
+		<modality name="GSPS" uid="1.2.840.10008.5.1.4.1.1.11.1" priority="5" dependency="(0000,0800)=PVALUE"/>
+		<modality name="SCPM" uid="1.2.840.10008.1.20.1" priority="6" dependency="(0000,0800)=SCPM"/>
+	</association>
+	<association name="Precedences">
+		<modality name="CR" uid="1.2.840.10008.5.1.4.1.1.1" priority="1"/>
+		<modality name="SC" uid="1.2.840.10008.5.1.4.1.1.7" priority="2"/>
+		<modality name="GSPS" uid="1.2.840.10008.5.1.4.1.1.11.1" priority="3" dependency="(0000,0800)=PVALUE"/>
+		<modality name="SCPM" uid="1.2.840.10008.1.20.1" priority="4" dependency="(0000,0800)=SCPM"/>
+	</association>
+</dicomLibrary>
