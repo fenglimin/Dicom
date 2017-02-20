@@ -91,7 +91,7 @@ namespace ExtendedListTest.CustomControl
 				node.Text = string.Format("{0} : {1}, {2}", directoryRecord.DirectoryRecordType, directoryRecord.Elements.GetSafeString(t.Modality),
 							 directoryRecord.Elements.GetSafeString(t.SeriesNumber));
 			}
-			else if (recordType == "IMAGE")
+			else if (recordType == "IMAGE" || recordType == "SR DOCUMENT")
 			{
 				node.ImageIndex = 4;
 				node.Text = string.Format("{0} : {1}, {2}", directoryRecord.DirectoryRecordType, directoryRecord.Elements.GetSafeString(t.InstanceNumber),
