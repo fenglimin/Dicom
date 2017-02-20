@@ -2,6 +2,8 @@
 Thumbs.db
 
 # Ignore Built Visual Studio Files
+*.dll
+*.exe
 *.suo
 *.ilk
 *.ipch
