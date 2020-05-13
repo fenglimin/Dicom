@@ -392,7 +392,7 @@ namespace ExtendedListTest
 
 	    public int GetPort()
 	    {
-	        return 1234;
+	        return 12345;
 	    }
 
         private void Form2_FormClosed(object sender, FormClosedEventArgs e)

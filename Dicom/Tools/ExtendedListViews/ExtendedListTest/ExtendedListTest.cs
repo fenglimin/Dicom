@@ -308,17 +308,17 @@ namespace ExtendedListTest
             // 
             this.panel1.Controls.Add(this.btnExit);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel1.Location = new System.Drawing.Point(0, 363);
+            this.panel1.Location = new System.Drawing.Point(0, 366);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(360, 43);
+            this.panel1.Size = new System.Drawing.Size(360, 40);
             this.panel1.TabIndex = 0;
             // 
             // btnExit
             // 
             this.btnExit.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.btnExit.Location = new System.Drawing.Point(10, 9);
+            this.btnExit.Location = new System.Drawing.Point(8, 8);
             this.btnExit.Name = "btnExit";
-            this.btnExit.Size = new System.Drawing.Size(90, 24);
+            this.btnExit.Size = new System.Drawing.Size(75, 23);
             this.btnExit.TabIndex = 0;
             this.btnExit.Text = "Exit";
             this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
@@ -330,7 +330,7 @@ namespace ExtendedListTest
             this.panel2.Location = new System.Drawing.Point(0, 0);
             this.panel2.Name = "panel2";
             this.panel2.Padding = new System.Windows.Forms.Padding(8);
-            this.panel2.Size = new System.Drawing.Size(360, 363);
+            this.panel2.Size = new System.Drawing.Size(360, 366);
             this.panel2.TabIndex = 1;
             // 
             // tabControl1
@@ -342,7 +342,7 @@ namespace ExtendedListTest
             this.tabControl1.Location = new System.Drawing.Point(8, 8);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(344, 347);
+            this.tabControl1.Size = new System.Drawing.Size(344, 350);
             this.tabControl1.TabIndex = 0;
             // 
             // tabPage1
@@ -350,7 +350,7 @@ namespace ExtendedListTest
             this.tabPage1.Controls.Add(this.containerListView1);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Size = new System.Drawing.Size(336, 321);
+            this.tabPage1.Size = new System.Drawing.Size(336, 324);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "ContainerListView";
             // 
@@ -516,7 +516,7 @@ namespace ExtendedListTest
             this.containerListView1.Name = "containerListView1";
             this.containerListView1.RowSelectColor = System.Drawing.SystemColors.Highlight;
             this.containerListView1.RowTrackColor = System.Drawing.Color.WhiteSmoke;
-            this.containerListView1.Size = new System.Drawing.Size(336, 321);
+            this.containerListView1.Size = new System.Drawing.Size(336, 324);
             this.containerListView1.SmallImageList = this.listImages;
             this.containerListView1.StateImageList = null;
             this.containerListView1.TabIndex = 0;
@@ -581,7 +581,7 @@ namespace ExtendedListTest
             this.tabPage2.Controls.Add(this.treeListView1);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Size = new System.Drawing.Size(336, 321);
+            this.tabPage2.Size = new System.Drawing.Size(278, 297);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "TreeListView";
             // 
@@ -635,6 +635,7 @@ namespace ExtendedListTest
             this.treeListView1.LabelEdit = false;
             this.treeListView1.Location = new System.Drawing.Point(0, 0);
             this.treeListView1.Name = "treeListView1";
+            treeListNode1.AdditionalData = null;
             treeListNode1.BackColor = System.Drawing.SystemColors.Window;
             treeListNode1.Checked = false;
             treeListNode1.Focused = false;
@@ -644,6 +645,7 @@ namespace ExtendedListTest
             treeListNode1.ImageIndex = 5;
             treeListNode1.Index = 0;
             treeListNode1.Key = null;
+            treeListNode2.AdditionalData = null;
             treeListNode2.BackColor = System.Drawing.SystemColors.Window;
             treeListNode2.Checked = false;
             treeListNode2.Focused = false;
@@ -658,6 +660,7 @@ namespace ExtendedListTest
             treeListNode2.Tag = null;
             treeListNode2.Text = "Test.exe";
             treeListNode2.UseItemStyleForSubItems = false;
+            treeListNode3.AdditionalData = null;
             treeListNode3.BackColor = System.Drawing.SystemColors.Window;
             treeListNode3.Checked = false;
             treeListNode3.Focused = false;
@@ -687,6 +690,7 @@ namespace ExtendedListTest
             treeListNode1.Tag = null;
             treeListNode1.Text = "Applications";
             treeListNode1.UseItemStyleForSubItems = false;
+            treeListNode4.AdditionalData = null;
             treeListNode4.BackColor = System.Drawing.SystemColors.Window;
             treeListNode4.Checked = false;
             treeListNode4.Focused = false;
@@ -696,6 +700,7 @@ namespace ExtendedListTest
             treeListNode4.ImageIndex = 5;
             treeListNode4.Index = 1;
             treeListNode4.Key = null;
+            treeListNode5.AdditionalData = null;
             treeListNode5.BackColor = System.Drawing.SystemColors.Window;
             treeListNode5.Checked = false;
             treeListNode5.Focused = false;
@@ -710,6 +715,7 @@ namespace ExtendedListTest
             treeListNode5.Tag = null;
             treeListNode5.Text = "Wave Files (.wav)";
             treeListNode5.UseItemStyleForSubItems = false;
+            treeListNode6.AdditionalData = null;
             treeListNode6.BackColor = System.Drawing.Color.Empty;
             treeListNode6.Checked = false;
             treeListNode6.Focused = false;
@@ -732,6 +738,7 @@ namespace ExtendedListTest
             treeListNode4.Tag = null;
             treeListNode4.Text = "Audio Files";
             treeListNode4.UseItemStyleForSubItems = false;
+            treeListNode7.AdditionalData = null;
             treeListNode7.BackColor = System.Drawing.SystemColors.Window;
             treeListNode7.Checked = false;
             treeListNode7.Focused = false;
@@ -741,6 +748,7 @@ namespace ExtendedListTest
             treeListNode7.ImageIndex = 5;
             treeListNode7.Index = 2;
             treeListNode7.Key = null;
+            treeListNode8.AdditionalData = null;
             treeListNode8.BackColor = System.Drawing.SystemColors.Window;
             treeListNode8.Checked = false;
             treeListNode8.Focused = false;
@@ -755,6 +763,7 @@ namespace ExtendedListTest
             treeListNode8.Tag = null;
             treeListNode8.Text = "Text Files (.txt)";
             treeListNode8.UseItemStyleForSubItems = false;
+            treeListNode9.AdditionalData = null;
             treeListNode9.BackColor = System.Drawing.SystemColors.Window;
             treeListNode9.Checked = false;
             treeListNode9.Focused = false;
@@ -769,6 +778,7 @@ namespace ExtendedListTest
             treeListNode9.Tag = null;
             treeListNode9.Text = "Document Files (.doc)";
             treeListNode9.UseItemStyleForSubItems = false;
+            treeListNode10.AdditionalData = null;
             treeListNode10.BackColor = System.Drawing.SystemColors.Window;
             treeListNode10.Checked = false;
             treeListNode10.Focused = false;
@@ -792,6 +802,7 @@ namespace ExtendedListTest
             treeListNode7.Tag = null;
             treeListNode7.Text = "Documents";
             treeListNode7.UseItemStyleForSubItems = false;
+            treeListNode11.AdditionalData = null;
             treeListNode11.BackColor = System.Drawing.SystemColors.Window;
             treeListNode11.Checked = false;
             treeListNode11.Focused = false;
@@ -801,6 +812,7 @@ namespace ExtendedListTest
             treeListNode11.ImageIndex = 5;
             treeListNode11.Index = 3;
             treeListNode11.Key = null;
+            treeListNode12.AdditionalData = null;
             treeListNode12.BackColor = System.Drawing.SystemColors.Window;
             treeListNode12.Checked = false;
             treeListNode12.Focused = false;
@@ -815,6 +827,7 @@ namespace ExtendedListTest
             treeListNode12.Tag = null;
             treeListNode12.Text = "JPEG Files (.jpg)";
             treeListNode12.UseItemStyleForSubItems = false;
+            treeListNode13.AdditionalData = null;
             treeListNode13.BackColor = System.Drawing.SystemColors.Window;
             treeListNode13.Checked = false;
             treeListNode13.Focused = false;
@@ -829,6 +842,7 @@ namespace ExtendedListTest
             treeListNode13.Tag = null;
             treeListNode13.Text = "GIF Files (.gif)";
             treeListNode13.UseItemStyleForSubItems = false;
+            treeListNode14.AdditionalData = null;
             treeListNode14.BackColor = System.Drawing.SystemColors.Window;
             treeListNode14.Checked = false;
             treeListNode14.Focused = false;
@@ -852,6 +866,7 @@ namespace ExtendedListTest
             treeListNode11.Tag = null;
             treeListNode11.Text = "Image Files";
             treeListNode11.UseItemStyleForSubItems = false;
+            treeListNode15.AdditionalData = null;
             treeListNode15.BackColor = System.Drawing.SystemColors.Window;
             treeListNode15.Checked = false;
             treeListNode15.Focused = false;
@@ -861,6 +876,7 @@ namespace ExtendedListTest
             treeListNode15.ImageIndex = 5;
             treeListNode15.Index = 4;
             treeListNode15.Key = null;
+            treeListNode16.AdditionalData = null;
             treeListNode16.BackColor = System.Drawing.SystemColors.Window;
             treeListNode16.Checked = false;
             treeListNode16.Focused = false;
@@ -875,6 +891,7 @@ namespace ExtendedListTest
             treeListNode16.Tag = null;
             treeListNode16.Text = "MPEG 4 (.mpg, .avi)";
             treeListNode16.UseItemStyleForSubItems = false;
+            treeListNode17.AdditionalData = null;
             treeListNode17.BackColor = System.Drawing.SystemColors.Window;
             treeListNode17.Checked = false;
             treeListNode17.Focused = false;
@@ -908,7 +925,7 @@ namespace ExtendedListTest
             this.treeListView1.RowTracking = false;
             this.treeListView1.ShowPlusMinus = false;
             this.treeListView1.ShowRootLines = true;
-            this.treeListView1.Size = new System.Drawing.Size(336, 321);
+            this.treeListView1.Size = new System.Drawing.Size(278, 297);
             this.treeListView1.SmallImageList = this.listImages;
             this.treeListView1.StateImageList = null;
             this.treeListView1.TabIndex = 0;
@@ -963,7 +980,7 @@ namespace ExtendedListTest
             this.tabPage3.Controls.Add(this.treeListView2);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(404, 351);
+            this.tabPage3.Size = new System.Drawing.Size(278, 297);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "High Volume TreeList";
             // 
@@ -972,9 +989,9 @@ namespace ExtendedListTest
             this.btnClearHi.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnClearHi.Enabled = false;
             this.btnClearHi.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.btnClearHi.Location = new System.Drawing.Point(202, 319);
+            this.btnClearHi.Location = new System.Drawing.Point(112, 268);
             this.btnClearHi.Name = "btnClearHi";
-            this.btnClearHi.Size = new System.Drawing.Size(90, 25);
+            this.btnClearHi.Size = new System.Drawing.Size(75, 24);
             this.btnClearHi.TabIndex = 3;
             this.btnClearHi.Text = "Clear";
             this.btnClearHi.Click += new System.EventHandler(this.btnClearHi_Click);
@@ -983,9 +1000,9 @@ namespace ExtendedListTest
             // 
             this.lblItemsIns.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblItemsIns.Location = new System.Drawing.Point(19, 319);
+            this.lblItemsIns.Location = new System.Drawing.Point(16, 268);
             this.lblItemsIns.Name = "lblItemsIns";
-            this.lblItemsIns.Size = new System.Drawing.Size(183, 26);
+            this.lblItemsIns.Size = new System.Drawing.Size(96, 24);
             this.lblItemsIns.TabIndex = 2;
             this.lblItemsIns.Text = "Items Inserted: 0";
             this.lblItemsIns.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -994,9 +1011,9 @@ namespace ExtendedListTest
             // 
             this.btnAddItems.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnAddItems.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.btnAddItems.Location = new System.Drawing.Point(298, 319);
+            this.btnAddItems.Location = new System.Drawing.Point(192, 268);
             this.btnAddItems.Name = "btnAddItems";
-            this.btnAddItems.Size = new System.Drawing.Size(90, 25);
+            this.btnAddItems.Size = new System.Drawing.Size(75, 24);
             this.btnAddItems.TabIndex = 1;
             this.btnAddItems.Text = "Add Items";
             this.btnAddItems.Click += new System.EventHandler(this.btnAddItems_Click);
@@ -1058,11 +1075,11 @@ namespace ExtendedListTest
             this.treeListView2.ItemHeight = 20;
             this.treeListView2.ItemMenu = null;
             this.treeListView2.LabelEdit = false;
-            this.treeListView2.Location = new System.Drawing.Point(10, 9);
+            this.treeListView2.Location = new System.Drawing.Point(8, 8);
             this.treeListView2.Name = "treeListView2";
             this.treeListView2.RowSelectColor = System.Drawing.SystemColors.Highlight;
             this.treeListView2.RowTrackColor = System.Drawing.Color.WhiteSmoke;
-            this.treeListView2.Size = new System.Drawing.Size(384, 301);
+            this.treeListView2.Size = new System.Drawing.Size(264, 252);
             this.treeListView2.SmallImageList = this.listImages;
             this.treeListView2.StateImageList = null;
             this.treeListView2.TabIndex = 0;
@@ -1071,7 +1088,7 @@ namespace ExtendedListTest
             // 
             // Form1
             // 
-            this.AutoScaleBaseSize = new System.Drawing.Size(6, 14);
+            this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
             this.ClientSize = new System.Drawing.Size(360, 406);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);

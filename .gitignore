@@ -63,4 +63,5 @@ src/prototypes/*/packages/*/
 MultiExplorer.v12.suo
 RunCmd.exe
 
-
+bin
+.vs

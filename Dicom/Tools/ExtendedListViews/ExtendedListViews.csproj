@@ -88,18 +88,14 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ContainerListView.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="ContainerListView.cs" />
     <Compile Include="Helpers\StringTools.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="IParentChildList.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="TreeListView.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="TreeListView.cs" />
     <Compile Include="uxTheme\Wrapper.cs">
       <SubType>Code</SubType>
     </Compile>
